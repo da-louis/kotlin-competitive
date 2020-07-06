@@ -4,7 +4,7 @@ import org.junit.Test
 internal class SearchKtTest {
 
     @Test
-    fun list() {
+    fun listBinarySearch() {
         val list = listOf(1, 1, 2, 3, 3, 3)
 
         list.run {
@@ -23,7 +23,7 @@ internal class SearchKtTest {
     }
 
     @Test
-    fun array() {
+    fun arrayBinarySearch() {
         val array = arrayOf(1, 1, 2, 3, 3, 3)
 
         array.run {
@@ -42,7 +42,7 @@ internal class SearchKtTest {
     }
 
     @Test
-    fun intArray() {
+    fun intArrayBinarySearch() {
         val intArray = intArrayOf(1, 1, 2, 3, 3, 3)
 
         intArray.run {
@@ -61,7 +61,7 @@ internal class SearchKtTest {
     }
 
     @Test
-    fun longArray() {
+    fun longArrayBinarySearch() {
         val longArray = longArrayOf(1, 1, 2, 3, 3, 3)
 
         longArray.run {
@@ -79,4 +79,37 @@ internal class SearchKtTest {
         }
     }
 
+    @Test
+    fun searchAllPatterns() {
+        listOf(
+            arrayOf(false),
+            arrayOf(true)
+        ).let { expected ->
+            val actual = mutableListOf<Array<Boolean>>()
+            searchAllPatterns(listOf(false, true), 1) { actual.add(it) }
+            assertThat(actual).containsExactlyElementsOf(expected)
+        }
+
+        listOf(
+            arrayOf(false, false),
+            arrayOf(false, true),
+            arrayOf(true, false),
+            arrayOf(true, true)
+        ).let { expected ->
+            val actual = mutableListOf<Array<Boolean>>()
+            searchAllPatterns(listOf(false, true), 2) { actual.add(it) }
+            assertThat(actual).containsExactlyElementsOf(expected)
+        }
+
+        listOf(
+            arrayOf(0, 0),
+            arrayOf(0, 1),
+            arrayOf(1, 0),
+            arrayOf(1, 1)
+        ).let { expected ->
+            val actual = mutableListOf<Array<Int>>()
+            searchAllPatterns(listOf(0, 1), 2) { actual.add(it) }
+            assertThat(actual).containsExactlyElementsOf(expected)
+        }
+    }
 }

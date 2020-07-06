@@ -37,3 +37,19 @@ fun <T : Comparable<T>> List<T>.upperBound(key: T) = binarySearch { it > key }
 fun <T : Comparable<T>> Array<T>.upperBound(key: T) = binarySearch { it > key }
 fun IntArray.upperBound(key: Int) = binarySearch { it > key }
 fun LongArray.upperBound(key: Long) = binarySearch { it > key }
+
+@Suppress("unused", "SameParameterValue")
+inline fun <reified T> searchAllPatterns(patterns: List<T>, length: Int, action: (Array<T>) -> Unit) {
+    val patternSize = patterns.size
+    val pow = (1..length).fold(1L) { acc: Long, _: Int -> acc * patternSize }
+    val allPatterns = if (pow in 1..Int.MAX_VALUE) pow.toInt() else error("$pow is too large!")
+    for (i in 0 until allPatterns) {
+        val array = Array(length) { patterns[0] }
+        var div = 1
+        for (j in 0 until length) {
+            array[length - j - 1] = patterns[(i / div) % patternSize]
+            div *= patternSize
+        }
+        action(array)
+    }
+}
