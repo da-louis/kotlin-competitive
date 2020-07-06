@@ -3,79 +3,73 @@ import org.junit.Test
 
 internal class SearchKtTest {
 
+    private val list = listOf(1, 1, 2, 3, 3, 3)
+
+    private val lowerBoundParamAndExpected = listOf(
+        0 to 0,
+        1 to 0,
+        2 to 2,
+        3 to 3,
+        4 to 6
+    )
+
+    private val upperBoundParamAndExpected = listOf(
+        0 to 0,
+        1 to 2,
+        2 to 3,
+        3 to 6,
+        4 to 6
+    )
+
     @Test
     fun listBinarySearch() {
-        val list = listOf(1, 1, 2, 3, 3, 3)
+        val list = list.toList()
 
-        list.run {
-            assertThat(lowerBound(0)).isEqualTo(0)
-            assertThat(lowerBound(1)).isEqualTo(0)
-            assertThat(lowerBound(2)).isEqualTo(2)
-            assertThat(lowerBound(3)).isEqualTo(3)
-            assertThat(lowerBound(4)).isEqualTo(6)
+        lowerBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(list.lowerBound(param)).isEqualTo(expected)
+        }
 
-            assertThat(upperBound(0)).isEqualTo(0)
-            assertThat(upperBound(1)).isEqualTo(2)
-            assertThat(upperBound(2)).isEqualTo(3)
-            assertThat(upperBound(3)).isEqualTo(6)
-            assertThat(upperBound(4)).isEqualTo(6)
+        upperBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(list.upperBound(param)).isEqualTo(expected)
         }
     }
 
     @Test
     fun arrayBinarySearch() {
-        val array = arrayOf(1, 1, 2, 3, 3, 3)
+        val array = list.toTypedArray()
 
-        array.run {
-            assertThat(lowerBound(0)).isEqualTo(0)
-            assertThat(lowerBound(1)).isEqualTo(0)
-            assertThat(lowerBound(2)).isEqualTo(2)
-            assertThat(lowerBound(3)).isEqualTo(3)
-            assertThat(lowerBound(4)).isEqualTo(6)
+        lowerBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(array.lowerBound(param)).isEqualTo(expected)
+        }
 
-            assertThat(upperBound(0)).isEqualTo(0)
-            assertThat(upperBound(1)).isEqualTo(2)
-            assertThat(upperBound(2)).isEqualTo(3)
-            assertThat(upperBound(3)).isEqualTo(6)
-            assertThat(upperBound(4)).isEqualTo(6)
+        upperBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(array.upperBound(param)).isEqualTo(expected)
         }
     }
 
     @Test
     fun intArrayBinarySearch() {
-        val intArray = intArrayOf(1, 1, 2, 3, 3, 3)
+        val intArray = list.toIntArray()
 
-        intArray.run {
-            assertThat(lowerBound(0)).isEqualTo(0)
-            assertThat(lowerBound(1)).isEqualTo(0)
-            assertThat(lowerBound(2)).isEqualTo(2)
-            assertThat(lowerBound(3)).isEqualTo(3)
-            assertThat(lowerBound(4)).isEqualTo(6)
+        lowerBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(intArray.lowerBound(param)).isEqualTo(expected)
+        }
 
-            assertThat(upperBound(0)).isEqualTo(0)
-            assertThat(upperBound(1)).isEqualTo(2)
-            assertThat(upperBound(2)).isEqualTo(3)
-            assertThat(upperBound(3)).isEqualTo(6)
-            assertThat(upperBound(4)).isEqualTo(6)
+        upperBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(intArray.upperBound(param)).isEqualTo(expected)
         }
     }
 
     @Test
     fun longArrayBinarySearch() {
-        val longArray = longArrayOf(1, 1, 2, 3, 3, 3)
+        val longArray = list.map { it.toLong() }.toLongArray()
 
-        longArray.run {
-            assertThat(lowerBound(0)).isEqualTo(0)
-            assertThat(lowerBound(1)).isEqualTo(0)
-            assertThat(lowerBound(2)).isEqualTo(2)
-            assertThat(lowerBound(3)).isEqualTo(3)
-            assertThat(lowerBound(4)).isEqualTo(6)
+        lowerBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(longArray.lowerBound(param.toLong())).isEqualTo(expected)
+        }
 
-            assertThat(upperBound(0)).isEqualTo(0)
-            assertThat(upperBound(1)).isEqualTo(2)
-            assertThat(upperBound(2)).isEqualTo(3)
-            assertThat(upperBound(3)).isEqualTo(6)
-            assertThat(upperBound(4)).isEqualTo(6)
+        upperBoundParamAndExpected.forEach { (param, expected) ->
+            assertThat(longArray.upperBound(param.toLong())).isEqualTo(expected)
         }
     }
 
