@@ -14,7 +14,7 @@ private fun Int.toMint() = Mint(this.toLong())
 private class Mint(value: Long = 0L) {
     constructor(other: Mint) : this(other.value)
 
-    private val value = if (value < 0) (value % MOD) + MOD else value % MOD
+    private val value = (value % MOD).let { if (it < 0) it + MOD else it }
     operator fun unaryPlus() = this
     operator fun unaryMinus() = Mint(MOD - this.value)
     operator fun inc() = this.plus(1)
