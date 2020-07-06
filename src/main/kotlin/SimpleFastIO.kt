@@ -8,7 +8,10 @@ fun sample() = SimpleFastIO().exec {
     println(list, System.lineSeparator())
 }
 
-// TODO add test case
+/**
+ * TODO add doc
+ * TODO add test
+ */
 @Suppress("unused", "HasPlatformType")
 class SimpleFastIO {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
