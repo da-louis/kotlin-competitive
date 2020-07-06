@@ -14,6 +14,7 @@ fun <T : Comparable<T>> binarySearchBase(size: Int, check: (T) -> Boolean, getVa
 
 /**
  * list must be sorted.
+ * find element's index, fulfil `check`'s condition.
  */
 fun <T : Comparable<T>> List<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
 fun <T : Comparable<T>> Array<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
@@ -38,6 +39,9 @@ fun <T : Comparable<T>> Array<T>.upperBound(key: T) = binarySearch { it > key }
 fun IntArray.upperBound(key: Int) = binarySearch { it > key }
 fun LongArray.upperBound(key: Long) = binarySearch { it > key }
 
+/**
+ * simplify search-all-pattern (a.k.a. bit-whole-search)
+ */
 @Suppress("unused", "SameParameterValue")
 inline fun <reified T> searchAllPatterns(patterns: Array<T>, length: Int, action: (Array<T>) -> Unit) {
     val patternSize = patterns.size
