@@ -39,7 +39,7 @@ fun IntArray.upperBound(key: Int) = binarySearch { it > key }
 fun LongArray.upperBound(key: Long) = binarySearch { it > key }
 
 @Suppress("unused", "SameParameterValue")
-inline fun <reified T> searchAllPatterns(patterns: List<T>, length: Int, action: (Array<T>) -> Unit) {
+inline fun <reified T> searchAllPatterns(patterns: Array<T>, length: Int, action: (Array<T>) -> Unit) {
     val patternSize = patterns.size
     val pow = (1..length).fold(1L) { acc: Long, _: Int -> acc * patternSize }
     val allPatterns = if (pow in 1..Int.MAX_VALUE) pow.toInt() else error("$pow is too large!")

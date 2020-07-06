@@ -86,7 +86,7 @@ internal class SearchKtTest {
             arrayOf(true)
         ).let { expected ->
             val actual = mutableListOf<Array<Boolean>>()
-            searchAllPatterns(listOf(false, true), 1) { actual.add(it) }
+            searchAllPatterns(arrayOf(false, true), 1) { actual.add(it) }
             assertThat(actual).containsExactlyElementsOf(expected)
         }
 
@@ -97,7 +97,7 @@ internal class SearchKtTest {
             arrayOf(true, true)
         ).let { expected ->
             val actual = mutableListOf<Array<Boolean>>()
-            searchAllPatterns(listOf(false, true), 2) { actual.add(it) }
+            searchAllPatterns(arrayOf(false, true), 2) { actual.add(it) }
             assertThat(actual).containsExactlyElementsOf(expected)
         }
 
@@ -108,7 +108,7 @@ internal class SearchKtTest {
             arrayOf(1, 1)
         ).let { expected ->
             val actual = mutableListOf<Array<Int>>()
-            searchAllPatterns(listOf(0, 1), 2) { actual.add(it) }
+            searchAllPatterns(arrayOf(0, 1), 2) { actual.add(it) }
             assertThat(actual).containsExactlyElementsOf(expected)
         }
     }
