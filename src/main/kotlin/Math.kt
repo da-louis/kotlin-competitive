@@ -140,9 +140,10 @@ fun Int.powExact(p: Long): Int {
         if (y % 2 == 1L) result = result.multiply(x)
         y = y shr 1
         x = x.multiply(x)
+        if (result > java.math.BigInteger.valueOf(Int.MAX_VALUE.toLong()))
+            throw ArithmeticException("int overflow")
     }
-    return result.takeIf { it <= java.math.BigInteger.valueOf(Int.MAX_VALUE.toLong()) }?.toInt()
-        ?: throw ArithmeticException("int overflow")
+    return result.toInt()
 }
 
 /**
@@ -156,7 +157,8 @@ fun Long.powExact(p: Long): Long {
         if (y % 2 == 1L) result = result.multiply(x)
         y = y shr 1
         x = x.multiply(x)
+        if (result > java.math.BigInteger.valueOf(Long.MAX_VALUE))
+            throw ArithmeticException("long overflow")
     }
-    return result.takeIf { it <= java.math.BigInteger.valueOf(Long.MAX_VALUE) }?.toLong()
-        ?: throw ArithmeticException("long overflow")
+    return result.toLong()
 }
