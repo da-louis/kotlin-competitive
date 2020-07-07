@@ -22,5 +22,5 @@ class SimpleFastIO {
     fun println(any: Any) = sb.appendln(any)
     fun <T> print(any: Iterable<T>, separator: String) = sb.append(any.joinToString(separator))
     fun <T> println(any: Iterable<T>, separator: String) = sb.appendln(any.joinToString(separator))
-    fun exec(action: SimpleFastIO.() -> Unit) = run { action() }.run { kotlin.io.println(sb) }
+    fun exec(action: SimpleFastIO.() -> Unit) = run { action() }.run { kotlin.io.print(sb) }
 }
