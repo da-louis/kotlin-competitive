@@ -136,11 +136,12 @@ fun Int.powExact(p: Long): Int {
     var x = java.math.BigInteger.valueOf(this.toLong())
     var y = p
     var result = java.math.BigInteger.valueOf(1L)
+    val cap = java.math.BigInteger.valueOf(Int.MAX_VALUE.toLong())
     while (y > 0) {
         if (y % 2 == 1L) result = result.multiply(x)
         y = y shr 1
         x = x.multiply(x)
-        if (result > java.math.BigInteger.valueOf(Int.MAX_VALUE.toLong()))
+        if (result > cap)
             throw ArithmeticException("int overflow")
     }
     return result.toInt()
@@ -153,11 +154,12 @@ fun Long.powExact(p: Long): Long {
     var x = java.math.BigInteger.valueOf(this)
     var y = p
     var result = java.math.BigInteger.valueOf(1L)
+    val cap = java.math.BigInteger.valueOf(Long.MAX_VALUE)
     while (y > 0) {
         if (y % 2 == 1L) result = result.multiply(x)
         y = y shr 1
         x = x.multiply(x)
-        if (result > java.math.BigInteger.valueOf(Long.MAX_VALUE))
+        if (result > cap)
             throw ArithmeticException("long overflow")
     }
     return result.toLong()
