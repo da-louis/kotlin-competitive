@@ -141,8 +141,7 @@ fun Int.powExact(p: Long): Int {
         if (y % 2 == 1L) result = result.multiply(x)
         y = y shr 1
         x = x.multiply(x)
-        if (result > cap)
-            throw ArithmeticException("int overflow")
+        if (result > cap) throw ArithmeticException("int overflow")
     }
     return result.toInt()
 }
@@ -159,8 +158,7 @@ fun Long.powExact(p: Long): Long {
         if (y % 2 == 1L) result = result.multiply(x)
         y = y shr 1
         x = x.multiply(x)
-        if (result > cap)
-            throw ArithmeticException("long overflow")
+        if (result > cap) throw ArithmeticException("long overflow")
     }
     return result.toLong()
 }
