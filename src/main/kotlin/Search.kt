@@ -15,6 +15,9 @@ fun <T : Comparable<T>> binarySearchBase(size: Int, check: (T) -> Boolean, getVa
 /**
  * list must be sorted.
  * find element's index, fulfil `check`'s condition.
+ *
+ * note: these methods will shadowing default `binarySearch`.
+ *  (i think default `binarySearch` is not useful for competitive-programming, so no problems at all.)
  */
 fun <T : Comparable<T>> List<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
 fun <T : Comparable<T>> Array<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
