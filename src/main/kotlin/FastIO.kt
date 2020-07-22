@@ -10,7 +10,7 @@ fun sample() = SimpleFastIO().exec {
  * TODO add doc
  * TODO add test
  */
-@Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate")
+@Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate", "ClassName")
 class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
     private val sb: StringBuilder = StringBuilder()
@@ -27,7 +27,7 @@ class SimpleFastIO(private val separator: String = System.lineSeparator()) {
  * TODO add doc
  * TODO add test
  */
-@Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate")
+@Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate", "ClassName")
 class SimpleFastIOWithToken(private val separator: String = System.lineSeparator()) {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
     private var st: java.util.StringTokenizer = java.util.StringTokenizer("")
@@ -65,8 +65,7 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     private val sb = StringBuilder()
     private fun Byte.isPrintable() = this in 33..126
     private fun Byte.isNumeric() = this in '0'.toByte()..'9'.toByte()
-    private fun Byte.toNumVal() =
-        if (this.isNumeric()) this - '0'.toByte() else error(this.toString() + " is not numeric")
+    private fun Byte.toNumVal() = if (isNumeric()) this - '0'.toByte() else error("$this is not numeric")
 
     private fun hasNextByte(): Boolean {
         return if (pointer < bufferLength) true else {
@@ -101,19 +100,19 @@ class FastIO(private val separator: String = System.lineSeparator()) {
             negative = true
             b = readByte()
         }
-        if (!b.isNumeric()) error(b.toString() + " is not numeric.")
+        if (!b.isNumeric()) error("$b is not numeric.")
         while (true) {
             when {
                 b.isNumeric() -> n = n * 10 + b.toNumVal()
                 b.toInt() == -1 || !b.isPrintable() -> return if (negative) -n else n
-                else -> error("failed to parse. [n=" + n + ", b=" + b + "]")
+                else -> error("failed to parse. [n=$n, b=$b]")
             }
             b = readByte()
         }
     }
 
     fun readInt() = readLong()
-        .let { if (it in Int.MIN_VALUE..Int.MAX_VALUE) it.toInt() else error(it.toString() + " is not in range of Int.") }
+        .let { if (it in Int.MIN_VALUE..Int.MAX_VALUE) it.toInt() else error("$it is not in range of Int.") }
 
     fun readDouble(): Double {
         var n = 0.0
