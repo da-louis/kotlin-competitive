@@ -1,7 +1,7 @@
 /**
  * base of binarySearch/lowerBound/upperBound
  */
-fun <T : Comparable<T>> binarySearchBase(size: Int, check: (T) -> Boolean, getValue: (Int) -> T): Int {
+inline fun <T : Comparable<T>> binarySearchBase(size: Int, check: (T) -> Boolean, getValue: (Int) -> T): Int {
     var ng = -1
     var ok = size
 
@@ -19,10 +19,10 @@ fun <T : Comparable<T>> binarySearchBase(size: Int, check: (T) -> Boolean, getVa
  * note: these methods will shadowing default `binarySearch`.
  *  (i think default `binarySearch` is not useful for competitive-programming, so no problems at all.)
  */
-fun <T : Comparable<T>> List<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
-fun <T : Comparable<T>> Array<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
-fun IntArray.binarySearch(check: (Int) -> Boolean) = binarySearchBase(size, check) { this[it] }
-fun LongArray.binarySearch(check: (Long) -> Boolean) = binarySearchBase(size, check) { this[it] }
+inline fun <T : Comparable<T>> List<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
+inline fun <T : Comparable<T>> Array<T>.binarySearch(check: (T) -> Boolean) = binarySearchBase(size, check) { this[it] }
+inline fun IntArray.binarySearch(check: (Int) -> Boolean) = binarySearchBase(size, check) { this[it] }
+inline fun LongArray.binarySearch(check: (Long) -> Boolean) = binarySearchBase(size, check) { this[it] }
 
 /**
  * list must be sorted.
