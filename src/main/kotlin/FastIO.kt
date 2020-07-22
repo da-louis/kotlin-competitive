@@ -2,26 +2,22 @@
 
 fun sample() = SimpleFastIO().exec {
     val n = readLine()
-    val list = readLine().split(' ').map { it.toInt() }
 
     println(n)
-    println(list, System.lineSeparator())
 }
 
 /**
  * TODO add doc
  * TODO add test
  */
-@Suppress("unused", "HasPlatformType")
-class SimpleFastIO {
+@Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate")
+class SimpleFastIO(private val separator: String = "\n") {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
     private val sb: StringBuilder = StringBuilder()
     fun readLine(): String = br.readLine()!!
-    fun println(): Unit = run { sb.appendln() }
+    fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
-    fun println(any: Any): Unit = run { sb.appendln(any) }
-    fun <T> print(any: Iterable<T>, separator: String) = run { sb.append(any.joinToString(separator)) }
-    fun <T> println(any: Iterable<T>, separator: String) = run { sb.appendln(any.joinToString(separator)) }
+    fun println(any: Any): Unit = print(any.toString() + separator)
     fun exec(action: SimpleFastIO.() -> Unit) = run {
         Thread(null, { action() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
     }.run { kotlin.io.print(sb) }
@@ -32,7 +28,7 @@ class SimpleFastIO {
  * TODO add test
  */
 @Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate")
-class SimpleFastIOWithToken {
+class SimpleFastIOWithToken(private val separator: String = "\n") {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
     private var st: java.util.StringTokenizer = java.util.StringTokenizer("")
     private val sb: StringBuilder = StringBuilder()
@@ -41,15 +37,13 @@ class SimpleFastIOWithToken {
     fun readString(): String = run { prepareNext() }.run { st.nextToken() }
     fun readStringList(size: Int): List<String> = List(size) { readString() }
     fun readInt(): Int = Integer.valueOf(readString())
-    fun readIntList(size: Int): List<Int> = List(size) { Integer.valueOf(readString()) }
+    fun readIntList(size: Int): List<Int> = List(size) { readInt() }
     fun readLong(): Long = java.lang.Long.valueOf(readString())
-    fun readLongList(size: Int): List<Long> = List(size) { java.lang.Long.valueOf(readString()) }
+    fun readLongList(size: Int): List<Long> = List(size) { readLong() }
 
-    fun println(): Unit = run { sb.appendln() }
+    fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
-    fun println(any: Any): Unit = run { sb.appendln(any) }
-    fun <T> print(any: Iterable<T>, separator: String) = run { sb.append(any.joinToString(separator)) }
-    fun <T> println(any: Iterable<T>, separator: String) = run { sb.appendln(any.joinToString(separator)) }
+    fun println(any: Any): Unit = print(any.toString() + separator)
 
     fun exec(action: SimpleFastIOWithToken.() -> Unit) = run {
         Thread(null, { action() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
@@ -58,8 +52,12 @@ class SimpleFastIOWithToken {
     fun readLine(): Nothing = error("readLine is disabled.")
 }
 
-@Suppress("unused", "ClassName", "SpellCheckingInspection", "ConvertToStringTemplate")
-class FastIO {
+/**
+ * TODO add doc
+ * TODO add test
+ */
+@Suppress("unused", "ClassName", "SpellCheckingInspection", "ConvertToStringTemplate", "MemberVisibilityCanBePrivate")
+class FastIO(private val separator: String = "\n") {
     private val input = System.`in`
     private val buffer = ByteArray(1024)
     private var pointer = 0
@@ -145,9 +143,9 @@ class FastIO {
     inline fun <reified T> readArray(size: Int, init: () -> T) = Array(size) { init() }
     inline fun <T> readList(size: Int, init: () -> T) = List(size) { init() }
 
-    fun println(): Unit = run { sb.appendln() }
-    fun print(o: Any?): Unit = run { sb.append(o) }
-    fun println(o: Any?): Unit = run { sb.appendln(o) }
+    fun println(): Unit = run { sb.append(separator) }
+    fun print(any: Any): Unit = run { sb.append(any) }
+    fun println(any: Any): Unit = print(any.toString() + separator)
 
     fun exec(code: FastIO.() -> Unit) = run {
         Thread(null, { code() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
