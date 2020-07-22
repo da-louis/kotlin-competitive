@@ -27,7 +27,7 @@ jobs:
       with:
         arguments: test
       env:
-        DISCORD_ACCESS_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        ACCESS_TOKEN: ${{ secrets.DISCORD_TOKEN }}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
