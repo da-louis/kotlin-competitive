@@ -11,7 +11,7 @@ fun sample() = SimpleFastIO().exec {
  * TODO add test
  */
 @Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate")
-class SimpleFastIO(private val separator: String = "\n") {
+class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
     private val sb: StringBuilder = StringBuilder()
     fun readLine(): String = br.readLine()!!
@@ -28,7 +28,7 @@ class SimpleFastIO(private val separator: String = "\n") {
  * TODO add test
  */
 @Suppress("unused", "HasPlatformType", "MemberVisibilityCanBePrivate")
-class SimpleFastIOWithToken(private val separator: String = "\n") {
+class SimpleFastIOWithToken(private val separator: String = System.lineSeparator()) {
     private val br: java.io.BufferedReader = System.`in`.bufferedReader()
     private var st: java.util.StringTokenizer = java.util.StringTokenizer("")
     private val sb: StringBuilder = StringBuilder()
@@ -57,7 +57,7 @@ class SimpleFastIOWithToken(private val separator: String = "\n") {
  * TODO add test
  */
 @Suppress("unused", "ClassName", "SpellCheckingInspection", "ConvertToStringTemplate", "MemberVisibilityCanBePrivate")
-class FastIO(private val separator: String = "\n") {
+class FastIO(private val separator: String = System.lineSeparator()) {
     private val input = System.`in`
     private val buffer = ByteArray(1024)
     private var pointer = 0
