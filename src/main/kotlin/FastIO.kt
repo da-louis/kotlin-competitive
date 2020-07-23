@@ -40,6 +40,8 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
     fun readIntList(size: Int): List<Int> = List(size) { readInt() }
     fun readLong(): Long = java.lang.Long.valueOf(readString())
     fun readLongList(size: Int): List<Long> = List(size) { readLong() }
+    inline fun <reified T> readArray(size: Int, init: () -> T) = Array(size) { init() }
+    inline fun <T> readList(size: Int, init: () -> T) = List(size) { init() }
 
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
