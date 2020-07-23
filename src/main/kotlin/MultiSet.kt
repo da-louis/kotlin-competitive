@@ -1,9 +1,9 @@
-@file:Suppress("unused")
-
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbstractMultiSet<K>(protected open val map: MutableMap<K, Long>) {
     fun add(k: K, v: Long = 1) = map.inc(k, v)
     fun remove(k: K, v: Long = 1) = map.dec(k, v)
     fun removeAll(k: K) = map.remove(k)
+    fun clear() = map.clear()
     fun contains(k: K) = map.contains(k)
     fun count(k: K) = map[k] ?: 0
     fun isEmpty() = map.isEmpty()
