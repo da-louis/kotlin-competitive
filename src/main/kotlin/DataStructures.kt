@@ -32,6 +32,9 @@ private class UnionFind(initSize: Int) {
 
     fun isSame(x: Int, y: Int): Boolean = root(x) == root(y)
 
+    fun unite(pair: Pair<Int, Int>): Unit = unite(pair.first, pair.second)
+    fun isSame(pair: Pair<Int, Int>): Boolean = isSame(pair.first, pair.second)
+
     fun size(x: Int): Long = size[root(x)]
 }
 
