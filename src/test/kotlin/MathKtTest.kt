@@ -69,16 +69,16 @@ internal class MathKtTest {
 
     @Test
     fun simplePowExact_Long() {
-        assertThat(1L.simplePowExact(1L)).isEqualTo(1)
-        assertThat(1L.simplePowExact(2L)).isEqualTo(1)
-        assertThat(1L.simplePowExact(10000000L)).isEqualTo(1)
+        assertThat(1L.simplePowExact(1)).isEqualTo(1)
+        assertThat(1L.simplePowExact(2)).isEqualTo(1)
+        assertThat(1L.simplePowExact(10000000)).isEqualTo(1)
 
-        assertThat(2L.simplePowExact(1L)).isEqualTo(2)
-        assertThat(2L.simplePowExact(2L)).isEqualTo(4)
-        assertThat(3L.simplePowExact(3L)).isEqualTo(27)
+        assertThat(2L.simplePowExact(1)).isEqualTo(2)
+        assertThat(2L.simplePowExact(2)).isEqualTo(4)
+        assertThat(3L.simplePowExact(3)).isEqualTo(27)
 
-        assertThat(2L.simplePowExact(62L)).isEqualTo(4611686018427387904L)
-        assertThrows<ArithmeticException>("long overflow") { 2L.simplePowExact(63L) }
+        assertThat(2L.simplePowExact(62)).isEqualTo(4611686018427387904L)
+        assertThrows<ArithmeticException>("long overflow") { 2L.simplePowExact(63) }
     }
 
     @Test

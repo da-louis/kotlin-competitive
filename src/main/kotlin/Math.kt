@@ -115,7 +115,7 @@ fun isPrimeML(n: Long, repeat: Int = 1000): Boolean {
 // TODO refactor method name?
 fun Int.simplePowExact(p: Int): Int {
     var x = 1
-    for (i in 0 until p) x = Math.multiplyExact(x, this)
+    repeat(p) { x = Math.multiplyExact(x, this) }
     return x
 }
 
@@ -123,9 +123,9 @@ fun Int.simplePowExact(p: Int): Int {
  * O(p)
  */
 // TODO refactor method name?
-fun Long.simplePowExact(p: Long): Long {
+fun Long.simplePowExact(p: Int): Long {
     var x = 1L
-    for (i in 0 until p) x = Math.multiplyExact(x, this)
+    repeat(p) { x = Math.multiplyExact(x, this) }
     return x
 }
 
