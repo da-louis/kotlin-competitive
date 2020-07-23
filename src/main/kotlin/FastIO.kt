@@ -78,7 +78,7 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     private fun readByte(): Byte = if (hasNextByte()) buffer[pointer++] else -1
     private fun skipUnprintable() = run { while (hasNextByte() && !buffer[pointer].isPrintable()) pointer++ }
     private fun hasNext(): Boolean = run { skipUnprintable() }.run { hasNextByte() }
-    private fun hasNextOrError() = if (!hasNext()) error("has no next element.") else Unit
+    private fun hasNextOrError() = run { if (!hasNext()) error("has no next element.") }
 
     fun readString(): String {
         hasNextOrError()
