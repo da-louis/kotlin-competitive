@@ -17,7 +17,7 @@ class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     fun readLine(): String = br.readLine()!!
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
-    fun println(any: Any): Unit = print(any.toString() + separator)
+    fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun exec(action: SimpleFastIO.() -> Unit) = run {
         Thread(null, { action() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
     }.run { kotlin.io.print(sb) }
@@ -45,7 +45,7 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
 
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
-    fun println(any: Any): Unit = print(any.toString() + separator)
+    fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
 
     fun exec(action: SimpleFastIOWithToken.() -> Unit) = run {
         Thread(null, { action() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
@@ -146,7 +146,7 @@ class FastIO(private val separator: String = System.lineSeparator()) {
 
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
-    fun println(any: Any): Unit = print(any.toString() + separator)
+    fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
 
     fun exec(code: FastIO.() -> Unit) = run {
         Thread(null, { code() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
