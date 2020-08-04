@@ -19,7 +19,9 @@ class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun exec(action: SimpleFastIO.() -> Unit) = run {
-        Thread(null, { action() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
+        Thread(null, { action() }, "solve", 128 * 1024 * 1024)
+            .apply { setUncaughtExceptionHandler { _, e -> e.printStackTrace(); kotlin.system.exitProcess(1) } }
+            .apply { start() }.join()
     }.run { kotlin.io.print(sb) }
 }
 
@@ -48,7 +50,9 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
 
     fun exec(action: SimpleFastIOWithToken.() -> Unit) = run {
-        Thread(null, { action() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
+        Thread(null, { action() }, "solve", 128 * 1024 * 1024)
+            .apply { setUncaughtExceptionHandler { _, e -> e.printStackTrace(); kotlin.system.exitProcess(1) } }
+            .apply { start() }.join()
     }.run { kotlin.io.print(sb) }
 
     fun readLine(): Nothing = error("readLine is disabled.")
@@ -148,8 +152,10 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
 
-    fun exec(code: FastIO.() -> Unit) = run {
-        Thread(null, { code() }, "solve", 128 * 1024 * 1024).apply { start() }.join()
+    fun exec(action: FastIO.() -> Unit) = run {
+        Thread(null, { action() }, "solve", 128 * 1024 * 1024)
+            .apply { setUncaughtExceptionHandler { _, e -> e.printStackTrace(); kotlin.system.exitProcess(1) } }
+            .apply { start() }.join()
     }.run { kotlin.io.print(sb) }
 
     fun readLine(): Nothing = error("readLine is disabled.")
