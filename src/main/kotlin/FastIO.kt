@@ -18,11 +18,14 @@ class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
-    fun exec(action: SimpleFastIO.() -> Unit) = run {
+    fun exec(action: SimpleFastIO.() -> Unit) {
+        var t: Throwable? = null
         Thread(null, { action() }, "solve", 128 * 1024 * 1024)
-            .apply { setUncaughtExceptionHandler { _, e -> e.printStackTrace(); kotlin.system.exitProcess(1) } }
+            .apply { setUncaughtExceptionHandler { _, t1 -> t = t1 } }
             .apply { start() }.join()
-    }.run { kotlin.io.print(sb) }
+        t?.let { throw it }
+        kotlin.io.print(sb)
+    }
 }
 
 /**
@@ -49,11 +52,14 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
 
-    fun exec(action: SimpleFastIOWithToken.() -> Unit) = run {
+    fun exec(action: SimpleFastIOWithToken.() -> Unit) {
+        var t: Throwable? = null
         Thread(null, { action() }, "solve", 128 * 1024 * 1024)
-            .apply { setUncaughtExceptionHandler { _, e -> e.printStackTrace(); kotlin.system.exitProcess(1) } }
+            .apply { setUncaughtExceptionHandler { _, t1 -> t = t1 } }
             .apply { start() }.join()
-    }.run { kotlin.io.print(sb) }
+        t?.let { throw it }
+        kotlin.io.print(sb)
+    }
 
     fun readLine(): Nothing = error("readLine is disabled.")
 }
@@ -152,11 +158,14 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
 
-    fun exec(action: FastIO.() -> Unit) = run {
+    fun exec(action: FastIO.() -> Unit) {
+        var t: Throwable? = null
         Thread(null, { action() }, "solve", 128 * 1024 * 1024)
-            .apply { setUncaughtExceptionHandler { _, e -> e.printStackTrace(); kotlin.system.exitProcess(1) } }
+            .apply { setUncaughtExceptionHandler { _, t1 -> t = t1 } }
             .apply { start() }.join()
-    }.run { kotlin.io.print(sb) }
+        t?.let { throw it }
+        kotlin.io.print(sb)
+    }
 
     fun readLine(): Nothing = error("readLine is disabled.")
 }
