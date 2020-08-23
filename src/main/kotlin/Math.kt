@@ -19,10 +19,9 @@ fun lcm(a: Long, b: Long): Long {
 /**
  * O(sqrt(max))
  */
-fun primes(max: Long): LongArray {
+fun primes(max: Long): List<Long> {
     val sqrt = ceil(sqrt(max.toDouble())).toLong()
     val primes = mutableListOf<Long>()
-
     var target = (2..max).toList()
 
     while (target.isNotEmpty() && target.first() <= sqrt) {
@@ -33,7 +32,7 @@ fun primes(max: Long): LongArray {
 
     primes.addAll(target)
 
-    return primes.toLongArray()
+    return primes
 }
 
 /**
