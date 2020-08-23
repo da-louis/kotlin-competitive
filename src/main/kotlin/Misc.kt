@@ -67,3 +67,27 @@ fun LongArray.scanReduceWithLongArray(operation: (acc: Long, Long) -> Long): Lon
     for (i in 1..this.lastIndex) accumulator[i] = operation(accumulator[i - 1], this[i])
     return accumulator
 }
+
+fun IntArray.swap(a: Int, b: Int) {
+    val temp = this[a]
+    this[a] = this[b]
+    this[b] = temp
+}
+
+fun LongArray.swap(a: Int, b: Int) {
+    val temp = this[a]
+    this[a] = this[b]
+    this[b] = temp
+}
+
+fun CharArray.swap(a: Int, b: Int) {
+    val temp = this[a]
+    this[a] = this[b]
+    this[b] = temp
+}
+
+fun IntArray.changeMinOf(i: Int, v: Int) = run { this[i] = kotlin.math.min(this[i], v) }
+fun IntArray.changeMaxOf(i: Int, v: Int) = run { this[i] = kotlin.math.max(this[i], v) }
+
+fun LongArray.changeMinOf(i: Int, v: Long) = run { this[i] = kotlin.math.min(this[i], v) }
+fun LongArray.changeMaxOf(i: Int, v: Long) = run { this[i] = kotlin.math.max(this[i], v) }
