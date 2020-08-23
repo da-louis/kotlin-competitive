@@ -18,4 +18,11 @@ internal class MiscKtTest {
         assertThat(ma.value).isEqualTo(3)
     }
 
+    @Test
+    fun yesNo() {
+        assertThat(YesNo.asCamelCase(true)).isEqualTo("Yes")
+        assertThat(YesNo.asCamelCase(false)).isEqualTo("No")
+        assertThat(YesNo.asUpperCase(true)).isEqualTo("YES")
+        assertThat(YesNo.asUpperCase(false)).isEqualTo("NO")
+    }
 }

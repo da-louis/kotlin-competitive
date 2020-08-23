@@ -42,37 +42,37 @@ private class UnionFind(initSize: Int) {
  * TODO add doc
  * TODO add test
  */
-private class SegmentTree(init: LongArray, val identityElement: Long, val monad: (Long, Long) -> Long) {
-    val indices: Int
-    val nodes: LongArray
+@Suppress("unused")
+private class SegmentTree(private val n: Int, private val identity: Long, private val merge: (Long, Long) -> Long) {
+    private val node: LongArray = LongArray(n shl 1) { identity }
 
-    init {
-        var indices = 1
-        while (indices < init.size) indices = indices shl 1
-        val nodes = LongArray(2 * indices - 1) { identityElement }
-        for (i in init.indices) nodes[i + indices - 1] = init[i]
-        for (i in indices - 2 downTo 0) nodes[i] = monad(nodes[2 * i + 1], nodes[2 * i + 2])
-        this.indices = indices
-        this.nodes = nodes
+    constructor(initArray: LongArray, identity: Long, merge: (Long, Long) -> Long) :
+            this(initArray.size, identity, merge) {
+        for (i in 0 until n) this.node[i + n] = initArray[i]
+        for (i in n - 1 downTo 1) this.node[i] = merge(this.node[i shl 1], this.node[i shl 1 or 1])
     }
 
-    operator fun set(x: Int, value: Long) {
-        var index = x + indices - 1
-        nodes[index] = value
-        while (index > 0) {
-            index = (index - 1) / 2
-            nodes[index] = monad(nodes[2 * index + 1], nodes[2 * index + 2])
+    operator fun set(index: Int, x: Long) {
+        var i = index + n
+        node[i] = x
+        while (i > 1) {
+            i = i shr 1
+            node[i] = merge(node[i shl 1], node[i shl 1 or 1])
         }
     }
 
-    operator fun get(range: IntRange) = get(range.first, range.last + 1)
+    operator fun get(range: IntRange) = internalGet(range.first, range.last + 1)
+    operator fun get(index: Int) = internalGet(index, index + 1)
 
-    fun get(a: Int, b: Int, k: Int = 0, l: Int = 0, r: Int = indices): Long {
-        if (r <= a || b <= l) return identityElement
-        if (a <= l && r <= b) return nodes[k]
-        return monad(
-            get(a, b, 2 * k + 1, l, (l + r) / 2),
-            get(a, b, 2 * k + 2, (l + r) / 2, r)
-        )
+    private fun internalGet(leftIndex: Int, rightIndex: Int): Long {
+        var result = identity
+        var l = leftIndex + n
+        var r = rightIndex + n
+        while (l < r) {
+            if (l and 1 == 1) result = merge(result, node[l++])
+            if (r and 1 == 1) result = merge(result, node[--r])
+            l = l shr 1; r = r shr 1
+        }
+        return result
     }
 }

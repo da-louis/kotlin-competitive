@@ -21,10 +21,10 @@ internal class MathKtTest {
 
     @Test
     fun primes() {
-        assertThat(primes(1)).isEqualTo(longArrayOf())
-        assertThat(primes(2)).isEqualTo(longArrayOf(2))
-        assertThat(primes(10)).isEqualTo(longArrayOf(2, 3, 5, 7))
-        assertThat(primes(20)).isEqualTo(longArrayOf(2, 3, 5, 7, 11, 13, 17, 19))
+        assertThat(primes(1)).isEqualTo(listOf<Long>())
+        assertThat(primes(2)).isEqualTo(listOf(2L))
+        assertThat(primes(10)).isEqualTo(listOf(2L, 3L, 5L, 7L))
+        assertThat(primes(20)).isEqualTo(listOf(2L, 3L, 5L, 7L, 11L, 13L, 17L, 19L))
     }
 
     @Test
