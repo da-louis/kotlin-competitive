@@ -18,6 +18,7 @@ class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
+    fun flush() = run { kotlin.io.println(sb); sb.clear() }
     fun exec(action: SimpleFastIO.() -> Unit) {
         var t: Throwable? = null
         Thread(null, { action() }, "solve", 128 * 1024 * 1024)
@@ -40,17 +41,13 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
     private fun prepareNext() = run { if (!st.hasMoreTokens()) st = java.util.StringTokenizer(br.readLine()) }
 
     fun readString(): String = run { prepareNext() }.run { st.nextToken() }
-    fun readStringList(size: Int): List<String> = List(size) { readString() }
     fun readInt(): Int = Integer.valueOf(readString())
-    fun readIntList(size: Int): List<Int> = List(size) { readInt() }
     fun readLong(): Long = java.lang.Long.valueOf(readString())
-    fun readLongList(size: Int): List<Long> = List(size) { readLong() }
-    inline fun <reified T> readArray(size: Int, init: () -> T) = Array(size) { init() }
-    inline fun <T> readList(size: Int, init: () -> T) = List(size) { init() }
 
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
+    fun flush() = run { kotlin.io.println(sb); sb.clear() }
 
     fun exec(action: SimpleFastIOWithToken.() -> Unit) {
         var t: Throwable? = null
@@ -89,7 +86,7 @@ class FastIO(private val separator: String = System.lineSeparator()) {
 
     private fun readByte(): Byte = if (hasNextByte()) buffer[pointer++] else -1
     private fun skipUnprintable() = run { while (hasNextByte() && !buffer[pointer].isPrintable()) pointer++ }
-    private fun hasNext(): Boolean = run { skipUnprintable() }.run { hasNextByte() }
+    private fun hasNext(): Boolean = run { skipUnprintable(); hasNextByte() }
     private fun hasNextOrError() = run { if (!hasNext()) error("has no next element.") }
 
     fun readString(): String {
@@ -144,19 +141,10 @@ class FastIO(private val separator: String = System.lineSeparator()) {
         return if (negative) -n else n
     }
 
-    fun readStringList(size: Int) = readList(size) { readString() }
-    fun readIntList(size: Int) = readList(size) { readInt() }
-    fun readLongList(size: Int) = readList(size) { readLong() }
-    fun readDoubleList(size: Int) = readList(size) { readDouble() }
-    fun readIntArray(size: Int) = IntArray(size) { readInt() }
-    fun readLongArray(size: Int) = LongArray(size) { readLong() }
-    fun readDoubleArray(size: Int) = DoubleArray(size) { readDouble() }
-    inline fun <reified T> readArray(size: Int, init: () -> T) = Array(size) { init() }
-    inline fun <T> readList(size: Int, init: () -> T) = List(size) { init() }
-
     fun println(): Unit = run { sb.append(separator) }
-    fun print(any: Any): Unit = run { sb.append(any) }
+    fun print(any: Any): Unit = run { sb.append(any.toString()) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
+    fun flush() = run { kotlin.io.println(sb); sb.clear() }
 
     fun exec(action: FastIO.() -> Unit) {
         var t: Throwable? = null
