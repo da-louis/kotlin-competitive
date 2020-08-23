@@ -162,3 +162,15 @@ fun Long.powExact(p: Long): Long {
     }
     return result.toLong()
 }
+
+/**
+ * TODO add test
+ * TODO add doc
+ */
+tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
+    return when {
+        x <= 1L -> error("$x is unexpected value.")
+        this % x == 0L -> (this@divCount / x).divCount(x, count + 1)
+        else -> count
+    }
+}
