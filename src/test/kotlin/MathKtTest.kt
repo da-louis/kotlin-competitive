@@ -40,7 +40,12 @@ internal class MathKtTest {
         assertThat(isPrime(2)).isTrue()
         assertThat(isPrime(3)).isTrue()
         assertThat(isPrime(4)).isFalse()
-        // TODO add test case
+
+        assertThat(isPrime(10)).isFalse()
+        assertThat(isPrime(11)).isTrue()
+        assertThat(isPrime(12)).isFalse()
+        assertThat(isPrime(13)).isTrue()
+        // assertThat(isPrime(57)).isTrue()
     }
 
     @Test
@@ -49,7 +54,12 @@ internal class MathKtTest {
         assertThat(isPrimeML(2)).isTrue()
         assertThat(isPrimeML(3)).isTrue()
         assertThat(isPrimeML(4)).isFalse()
-        // TODO add test case
+
+        assertThat(isPrimeML(10)).isFalse()
+        assertThat(isPrimeML(11)).isTrue()
+        assertThat(isPrimeML(12)).isFalse()
+        assertThat(isPrimeML(13)).isTrue()
+        // assertThat(isPrimeML(57)).isTrue()
     }
 
     @Test
