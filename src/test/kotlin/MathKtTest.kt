@@ -29,7 +29,6 @@ internal class MathKtTest {
 
     @Test
     fun primeFactorization() {
-        // TODO wrong expect value?
         assertThat(primeFactorization(1)).isEqualTo(mapOf<Long, Long>())
         assertThat(primeFactorization(10)).isEqualTo(mapOf(2L to 1L, 5L to 1L))
         assertThat(primeFactorization(12)).isEqualTo(mapOf(2L to 2L, 3L to 1L))
