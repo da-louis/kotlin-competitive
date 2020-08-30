@@ -1,3 +1,5 @@
+import java.util.*
+
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbstractMultiSet<K>(protected open val map: MutableMap<K, Long>) {
     fun add(k: K, v: Long = 1) = map.inc(k, v)
@@ -35,10 +37,15 @@ fun <K> multiSetOf(vararg args: K) = multiSetOf(args.toList())
 fun <K> multiSetOf(map: Map<K, List<K>>) = MultiSet(map.mapValues { it.value.size.toLong() }.toMutableMap())
 //fun <K> sortedMultiSetOf(map: Map<K, Long>) = MultiSet(map.toMutableMap())
 
-class SortedMultiSet<K : Comparable<K>>(override val map: java.util.SortedMap<K, Long> = sortedMapOf()) :
+@Suppress("unused")
+class SortedMultiSet<K : Comparable<K>>(override val map: TreeMap<K, Long> = TreeMap()) :
     AbstractMultiSet<K>(map) {
     fun min() = if (map.isNotEmpty()) map.firstKey() else null
     fun max() = if (map.isNotEmpty()) map.lastKey() else null
+    fun ceiling(key: K): K? = map.ceilingKey(key)
+    fun higher(key: K): K? = map.higherKey(key)
+    fun floor(key: K): K? = map.floorKey(key)
+    fun lower(key: K): K? = map.lowerKey(key)
 
     override fun hashCode() = map.hashCode()
     override fun toString() = "SortedMultiSet(map=$map)"
@@ -54,5 +61,5 @@ fun <K : Comparable<K>> sortedMultiSetOf() = SortedMultiSet<K>()
 fun <K : Comparable<K>> sortedMultiSetOf(vararg args: K) = sortedMultiSetOf(args.toList())
 fun <K : Comparable<K>> sortedMultiSetOf(iterable: Iterable<K>) = sortedMultiSetOf(iterable.groupBy { it })
 fun <K : Comparable<K>> sortedMultiSetOf(map: Map<K, List<K>>) =
-    SortedMultiSet(map.mapValues { it.value.size.toLong() }.toSortedMap())
-//fun <K : Comparable<K>> sortedMultiSetOf(map: Map<K, Long>) = SortedMultiSet(map.toSortedMap())
+    SortedMultiSet(TreeMap(map.mapValues { it.value.size.toLong() }))
+//fun <K : Comparable<K>> sortedMultiSetOf(map: Map<K, Long>) = SortedMultiSet(TreeMap(map))
