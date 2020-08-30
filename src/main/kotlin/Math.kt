@@ -178,19 +178,18 @@ tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
 
 /**
  * O(n * log(log(n))) to construct
- * TODO add test
  */
 @Suppress("unused")
-private class Sieve(n: Int) {
-    private val divisibleBy: IntArray = IntArray(n + 1).apply { this[0] = -1; this[1] = -1 }
+class Sieve(max: Int) {
+    private val divisibleBy: IntArray = IntArray(max + 1).apply { this[0] = -1; this[1] = -1 }
     private val primes: MutableSet<Int> = mutableSetOf()
 
     init {
-        for (i in 2..n) {
+        for (i in 2..max) {
             if (divisibleBy[i] != 0) continue
             primes.add(i)
             divisibleBy[i] = i
-            for (j in i.toLong() * i..n step i.toLong()) {
+            for (j in i.toLong() * i..max step i.toLong()) {
                 if (divisibleBy[j.toInt()] == 0) divisibleBy[j.toInt()] = i
             }
         }
@@ -217,17 +216,18 @@ private class Sieve(n: Int) {
     /**
      * O(?)
      */
-    fun primeFactorization(n: Long): Map<Int, Int> {
+    fun primeFactorization(n: Long): Map<Long, Int> {
+        if (n <= 1) return primeFactorization(n.toInt()).mapKeys { it.key.toLong() }
         var curr = n
-        val factors = mutableMapOf<Int, Int>()
+        val factors = mutableMapOf<Long, Int>()
         for (prime in primes) {
             var divCount = 0
             while (curr % prime == 0L) {
-                curr %= prime; divCount++
+                curr /= prime; divCount++
             }
-            if (divCount > 0) factors[prime] = divCount
-            if (curr <= Int.MAX_VALUE && curr.toInt() in primes) break
+            if (divCount > 0) factors[prime.toLong()] = divCount
         }
+        if (curr > 1) factors[curr] = 1
         return factors
     }
 }

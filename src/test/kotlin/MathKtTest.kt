@@ -30,6 +30,7 @@ internal class MathKtTest {
     @Test
     fun primeFactorization() {
         assertThat(primeFactorization(1)).isEqualTo(mapOf<Long, Long>())
+        assertThat(primeFactorization(7)).isEqualTo(mapOf(7L to 1L))
         assertThat(primeFactorization(10)).isEqualTo(mapOf(2L to 1L, 5L to 1L))
         assertThat(primeFactorization(12)).isEqualTo(mapOf(2L to 2L, 3L to 1L))
     }
@@ -116,5 +117,31 @@ internal class MathKtTest {
 
         assertThat(2L.powExact(62L)).isEqualTo(4611686018427387904L)
         assertThrows<ArithmeticException>("long overflow") { 2L.powExact(63L) }
+    }
+
+    @Test
+    fun sieve() {
+        Sieve(13).run {
+            assertThat(isPrime(1)).isFalse()
+            assertThat(isPrime(2)).isTrue()
+            assertThat(isPrime(3)).isTrue()
+            assertThat(isPrime(4)).isFalse()
+
+            assertThat(isPrime(10)).isFalse()
+            assertThat(isPrime(11)).isTrue()
+            assertThat(isPrime(12)).isFalse()
+            assertThat(isPrime(13)).isTrue()
+            // assertThat(isPrime(57)).isTrue()
+
+            assertThat(primeFactorization(1)).isEqualTo(emptyMap<Long, Long>())
+            assertThat(primeFactorization(7)).isEqualTo(mapOf(7 to 1))
+            assertThat(primeFactorization(10)).isEqualTo(mapOf(2 to 1, 5 to 1))
+            assertThat(primeFactorization(12)).isEqualTo(mapOf(2 to 2, 3 to 1))
+
+            assertThat(primeFactorization(1L)).isEqualTo(emptyMap<Long, Int>())
+            assertThat(primeFactorization(7L)).isEqualTo(mapOf(7L to 1))
+            assertThat(primeFactorization(10L)).isEqualTo(mapOf(2L to 1, 5L to 1))
+            assertThat(primeFactorization(12L)).isEqualTo(mapOf(2L to 2, 3L to 1))
+        }
     }
 }
