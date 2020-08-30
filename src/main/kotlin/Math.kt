@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -171,5 +173,60 @@ tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
         x <= 1L -> error("$x is unexpected value.")
         this % x == 0L -> (this@divCount / x).divCount(x, count + 1)
         else -> count
+    }
+}
+
+/**
+ * O(n * log(log(n))) to construct
+ */
+@Suppress("unused")
+private class Sieve(n: Int) {
+    private val divisibleBy: IntArray = IntArray(n + 1).apply { this[0] = -1; this[1] = -1 }
+    private val primes: MutableSet<Int> = mutableSetOf()
+
+    init {
+        for (i in 2..n) {
+            if (divisibleBy[i] != 0) continue
+            primes.add(i)
+            divisibleBy[i] = i
+            for (j in i.toLong() * i..n step i.toLong()) {
+                if (divisibleBy[j.toInt()] == 0) divisibleBy[j.toInt()] = i
+            }
+        }
+    }
+
+    /**
+     * O(1)
+     */
+    fun isPrime(n: Int) = n > 1 && divisibleBy[n] == n
+
+    /**
+     * O(log(n))
+     */
+    fun primeFactorization(n: Int): Map<Int, Int> {
+        var curr = n
+        val factors = mutableMapOf<Int, Int>()
+        while (curr > 1) {
+            factors.merge(divisibleBy[curr], 1, Int::plus)
+            curr /= divisibleBy[curr]
+        }
+        return factors
+    }
+
+    /**
+     * O(?)
+     */
+    fun primeFactorization(n: Long): Map<Int, Int> {
+        var curr = n
+        val factors = mutableMapOf<Int, Int>()
+        for (prime in primes) {
+            var divCount = 0
+            while (curr % prime == 0L) {
+                curr %= prime; divCount++
+            }
+            if (divCount > 0) factors[prime] = divCount
+            if (curr <= Int.MAX_VALUE && curr.toInt() in primes) break
+        }
+        return factors
     }
 }
