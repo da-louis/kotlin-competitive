@@ -181,10 +181,11 @@ tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
  */
 @Suppress("unused")
 class Sieve(max: Int) {
-    private val divisibleBy: IntArray = IntArray(max + 1).apply { this[0] = -1; this[1] = -1 }
+    private val divisibleBy: IntArray = IntArray(max + 1)
     private val primes: MutableSet<Int> = mutableSetOf()
 
     init {
+        divisibleBy[0] = -1; divisibleBy[1] = -1
         for (i in 2..max) {
             if (divisibleBy[i] != 0) continue
             primes.add(i)
