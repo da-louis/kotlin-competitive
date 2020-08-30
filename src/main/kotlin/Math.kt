@@ -218,7 +218,7 @@ class Sieve(max: Int) {
      * O(?)
      */
     fun primeFactorization(n: Long): Map<Long, Int> {
-        if (n <= 1) return primeFactorization(n.toInt()).mapKeys { it.key.toLong() }
+        if (n <= Int.MAX_VALUE) return primeFactorization(n.toInt()).mapKeys { it.key.toLong() }
         var curr = n
         val factors = mutableMapOf<Long, Int>()
         for (prime in primes) {
