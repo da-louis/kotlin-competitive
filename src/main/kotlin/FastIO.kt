@@ -1,9 +1,10 @@
 @file:Suppress("unused")
 
-fun sample() = SimpleFastIO().exec {
-    val n = readLine()
+fun main() = FastIO().exec {
+    val n = readInt()
 
     println(n)
+    debug("test")
 }
 
 /**
@@ -19,6 +20,9 @@ class SimpleFastIO(private val separator: String = System.lineSeparator()) {
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun flush() = run { kotlin.io.println(sb); sb.clear() }
+    fun debug(any: Any): Unit =
+        run { if ("ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()) System.err.println(any) }
+
     fun exec(action: SimpleFastIO.() -> Unit) {
         var t: Throwable? = null
         Thread(null, { action() }, "solve", 128 * 1024 * 1024)
@@ -48,6 +52,8 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun flush() = run { kotlin.io.println(sb); sb.clear() }
+    fun debug(any: Any): Unit =
+        run { if ("ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()) System.err.println(any) }
 
     fun exec(action: SimpleFastIOWithToken.() -> Unit) {
         var t: Throwable? = null
@@ -145,6 +151,8 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     fun print(any: Any): Unit = run { sb.append(any.toString()) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun flush() = run { kotlin.io.println(sb); sb.clear() }
+    fun debug(any: Any): Unit =
+        run { if ("ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()) System.err.println(any) }
 
     fun exec(action: FastIO.() -> Unit) {
         var t: Throwable? = null
