@@ -142,6 +142,11 @@ internal class MathKtTest {
             assertThat(primeFactorization(7L)).isEqualTo(mapOf(7L to 1))
             assertThat(primeFactorization(10L)).isEqualTo(mapOf(2L to 1, 5L to 1))
             assertThat(primeFactorization(12L)).isEqualTo(mapOf(2L to 2, 3L to 1))
+            assertThat(primeFactorization(100L)).isEqualTo(mapOf(2L to 2, 5L to 2))
+            assertThat(primeFactorization(127L)).isEqualTo(mapOf(127L to 1))
+            assertThat(primeFactorization(128L)).isEqualTo(mapOf(2L to 7))
+            assertThat(primeFactorization(169L)).isEqualTo(mapOf(13L to 2))
+            assertThrows<IllegalArgumentException> { primeFactorization(170L) }
         }
     }
 }

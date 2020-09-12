@@ -180,9 +180,10 @@ tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
  * O(n * log(log(n))) to construct
  */
 @Suppress("unused")
-class Sieve(max: Int) {
+class Sieve(private val max: Int) {
     private val divisibleBy: IntArray = IntArray(max + 1)
     private val primes: MutableSet<Int> = mutableSetOf()
+    private val maxSquare = max.toLong() * max
 
     init {
         divisibleBy[0] = -1; divisibleBy[1] = -1
@@ -204,7 +205,7 @@ class Sieve(max: Int) {
     /**
      * O(log(n))
      */
-    fun primeFactorization(n: Int): Map<Int, Int> {
+    private fun primeFactorization(n: Int): Map<Int, Int> {
         var curr = n
         val factors = mutableMapOf<Int, Int>()
         while (curr > 1) {
@@ -217,8 +218,7 @@ class Sieve(max: Int) {
     /**
      * O(?)
      */
-    fun primeFactorization(n: Long): Map<Long, Int> {
-        if (n <= Int.MAX_VALUE) return primeFactorization(n.toInt()).mapKeys { it.key.toLong() }
+    private fun primeFactorization(n: Long): Map<Long, Int> {
         var curr = n
         val factors = mutableMapOf<Long, Int>()
         for (prime in primes) {
@@ -230,5 +230,17 @@ class Sieve(max: Int) {
         }
         if (curr > 1) factors[curr] = 1
         return factors
+    }
+
+    /**
+     * O(?)
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <K : Number> primeFactorization(n: K): Map<K, Int> {
+        return when {
+            n is Int && n <= max -> primeFactorization(n) as Map<K, Int>
+            n is Long && n <= maxSquare -> primeFactorization(n) as Map<K, Int>
+            else -> throw IllegalArgumentException("n=$n is not integer or too large. must be smaller than max*max=$maxSquare")
+        }
     }
 }
