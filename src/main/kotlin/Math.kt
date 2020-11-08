@@ -176,6 +176,13 @@ tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
     }
 }
 
+fun sigma(to: Long): Long = sigma(0, to)
+
+fun sigma(from: Long, to: Long): Long {
+    check(0 <= to && from in 0..to)
+    return (to + 1) * to / 2 - (from - 1) * from / 2
+}
+
 /**
  * O(n * log(log(n))) to construct
  */

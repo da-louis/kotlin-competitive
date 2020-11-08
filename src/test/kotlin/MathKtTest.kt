@@ -120,6 +120,25 @@ internal class MathKtTest {
     }
 
     @Test
+    fun sigma() {
+        assertThat(sigma(0)).isEqualTo(0)
+        assertThat(sigma(1)).isEqualTo(1)
+        assertThat(sigma(2)).isEqualTo(3)
+        assertThat(sigma(3)).isEqualTo(6)
+        assertThat(sigma(10)).isEqualTo(55)
+
+        assertThat(sigma(0, 0)).isEqualTo(0)
+        assertThat(sigma(0, 1)).isEqualTo(1)
+        assertThat(sigma(0, 2)).isEqualTo(3)
+        assertThat(sigma(0, 3)).isEqualTo(6)
+        assertThat(sigma(0, 10)).isEqualTo(55)
+        assertThat(sigma(1, 10)).isEqualTo(55)
+        assertThat(sigma(2, 10)).isEqualTo(54)
+        assertThat(sigma(3, 10)).isEqualTo(52)
+        assertThat(sigma(10, 10)).isEqualTo(10)
+    }
+
+    @Test
     fun sieve() {
         Sieve(13).run {
             assertThat(isPrime(1)).isFalse()
