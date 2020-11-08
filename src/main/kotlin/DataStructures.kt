@@ -4,9 +4,11 @@
  * TODO add doc
  * TODO add test
  */
-private class UnionFind(initSize: Int) {
-    private val parent = IntArray(initSize) { it }
-    private val size = LongArray(initSize) { 1L }
+private class UnionFind(initSize: Int, size: LongArray) {
+    constructor(initSize: Int) : this(initSize, LongArray(initSize) { 1L })
+
+    private val parent: IntArray = IntArray(initSize) { it }
+    private val size: LongArray = size.copyOf()
 
     fun root(x: Int): Int {
         if (x == parent[x]) return x
