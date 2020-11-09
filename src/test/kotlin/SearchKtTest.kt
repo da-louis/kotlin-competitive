@@ -3,6 +3,7 @@ import org.junit.Test
 
 internal class SearchKtTest {
 
+    // TODO refactor test
     private val list = listOf(1, 1, 2, 3, 3, 3)
 
     private val lowerBoundParamAndExpected = listOf(

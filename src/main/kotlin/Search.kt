@@ -44,12 +44,14 @@ fun LongArray.upperBound(key: Long) = binarySearch { it > key }
 
 /**
  * simplify search-all-pattern (a.k.a. bit-whole-search)
- * needs [powExact]
  */
 @Suppress("unused", "SameParameterValue")
 inline fun <reified T> searchAllPatterns(patterns: Array<T>, length: Int, action: (Array<T>) -> Unit) {
     val patternSize = patterns.size
-    val allPatterns = patternSize.powExact(length.toLong())
+    check(length < 40) { "length:$length is too large! (must be TLE)" }
+    val pow = (1..length).fold(1L) { acc: Long, _: Int -> Math.multiplyExact(acc, patternSize) }
+    check(pow <= Int.MAX_VALUE) { "pow:$pow is too large! (must be TLE)" }
+    val allPatterns = pow.toInt()
     for (i in 0 until allPatterns) {
         val array = Array(length) { patterns[0] }
         var div = 1
