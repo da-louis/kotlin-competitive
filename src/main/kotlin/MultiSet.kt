@@ -1,7 +1,9 @@
 import java.util.*
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class AbstractMultiSet<K>(protected open val map: MutableMap<K, Long>) {
+abstract class AbstractMultiSet<K>(map: Map<K, Long>) {
+    protected open val map: MutableMap<K, Long> = map.toMutableMap()
+
     fun add(k: K, v: Long = 1) = map.inc(k, v)
     fun remove(k: K, v: Long = 1) = map.dec(k, v)
     fun removeAll(k: K) = map.remove(k)
@@ -20,7 +22,11 @@ abstract class AbstractMultiSet<K>(protected open val map: MutableMap<K, Long>) 
     abstract override fun equals(other: Any?): Boolean
 }
 
-class MultiSet<K>(override val map: MutableMap<K, Long> = mutableMapOf()) : AbstractMultiSet<K>(map) {
+class MultiSet<K>(map: Map<K, Long> = mapOf()) : AbstractMultiSet<K>(map) {
+    //        constructor(map: Map<K, List<K>>) : this(map.mapValues { it.value.size.toLong() }.toMutableMap())
+    constructor(iterable: Iterable<K>) : this(iterable.groupingBy { it }.eachCount().mapValues { it.value.toLong() })
+    constructor(vararg args: K) : this(args.toList())
+
     override fun toString() = "MultiSet(map=$map)"
     override fun hashCode() = map.hashCode()
     override fun equals(other: Any?): Boolean {
@@ -31,15 +37,14 @@ class MultiSet<K>(override val map: MutableMap<K, Long> = mutableMapOf()) : Abst
     }
 }
 
-fun <K> multiSetOf() = MultiSet<K>()
-fun <K> multiSetOf(iterable: Iterable<K>) = multiSetOf(iterable.groupBy { it })
-fun <K> multiSetOf(vararg args: K) = multiSetOf(args.toList())
-fun <K> multiSetOf(map: Map<K, List<K>>) = MultiSet(map.mapValues { it.value.size.toLong() }.toMutableMap())
-//fun <K> sortedMultiSetOf(map: Map<K, Long>) = MultiSet(map.toMutableMap())
-
 @Suppress("unused")
 class SortedMultiSet<K : Comparable<K>>(override val map: TreeMap<K, Long> = TreeMap()) :
     AbstractMultiSet<K>(map) {
+    //    constructor(map: Map<K, List<K>>) : this(TreeMap(map.mapValues { it.value.size.toLong() }))
+    constructor(map: Map<K, Long>) : this(TreeMap(map))
+    constructor(iterable: Iterable<K>) : this(iterable.groupingBy { it }.eachCount().mapValues { it.value.toLong() })
+    constructor(vararg args: K) : this(args.toList())
+
     fun min() = if (map.isNotEmpty()) map.firstKey() else null
     fun max() = if (map.isNotEmpty()) map.lastKey() else null
     fun ceiling(key: K): K? = map.ceilingKey(key)
@@ -56,10 +61,3 @@ class SortedMultiSet<K : Comparable<K>>(override val map: TreeMap<K, Long> = Tre
         return map == other.map
     }
 }
-
-fun <K : Comparable<K>> sortedMultiSetOf() = SortedMultiSet<K>()
-fun <K : Comparable<K>> sortedMultiSetOf(vararg args: K) = sortedMultiSetOf(args.toList())
-fun <K : Comparable<K>> sortedMultiSetOf(iterable: Iterable<K>) = sortedMultiSetOf(iterable.groupBy { it })
-fun <K : Comparable<K>> sortedMultiSetOf(map: Map<K, List<K>>) =
-    SortedMultiSet(TreeMap(map.mapValues { it.value.size.toLong() }))
-//fun <K : Comparable<K>> sortedMultiSetOf(map: Map<K, Long>) = SortedMultiSet(TreeMap(map))
