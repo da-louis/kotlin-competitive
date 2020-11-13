@@ -1,5 +1,3 @@
-import java.util.*
-
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbstractMultiSet<K>(map: Map<K, Long>) {
     protected open val map: MutableMap<K, Long> = map.toMutableMap()
@@ -38,10 +36,10 @@ class MultiSet<K>(map: Map<K, Long> = mapOf()) : AbstractMultiSet<K>(map) {
 }
 
 @Suppress("unused")
-class SortedMultiSet<K : Comparable<K>>(override val map: TreeMap<K, Long> = TreeMap()) :
+class SortedMultiSet<K : Comparable<K>>(override val map: java.util.TreeMap<K, Long> = java.util.TreeMap()) :
     AbstractMultiSet<K>(map) {
     //    constructor(map: Map<K, List<K>>) : this(TreeMap(map.mapValues { it.value.size.toLong() }))
-    constructor(map: Map<K, Long>) : this(TreeMap(map))
+    constructor(map: Map<K, Long>) : this(java.util.TreeMap(map))
     constructor(iterable: Iterable<K>) : this(iterable.groupingBy { it }.eachCount().mapValues { it.value.toLong() })
     constructor(vararg args: K) : this(args.toList())
 
