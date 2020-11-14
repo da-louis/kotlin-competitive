@@ -49,7 +49,7 @@ fun LongArray.upperBound(key: Long) = binarySearch { it > key }
 inline fun <reified T> searchAllPatterns(patterns: Array<T>, length: Int, action: (Array<T>) -> Unit) {
     val patternSize = patterns.size
     check(length < 40) { "length:$length is too large! (must be TLE)" }
-    val pow = (1..length).fold(1L) { acc: Long, _: Int -> Math.multiplyExact(acc, patternSize) }
+    val pow = (1L..length).fold(1L) { acc: Long, _: Long -> Math.multiplyExact(acc, patternSize.toLong()) }
     check(pow <= Int.MAX_VALUE) { "pow:$pow is too large! (must be TLE)" }
     val allPatterns = pow.toInt()
     for (i in 0 until allPatterns) {
