@@ -1,4 +1,6 @@
 ## Overview
+![CI](https://github.com/da-louis/kotlin-competitive/workflows/CI/badge.svg?branch=master)
+
 Kotlin libraries for competitive programing.  
 
 - Welcome
