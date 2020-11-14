@@ -6,36 +6,52 @@ internal class MultiSetKtTest {
     fun multiSet() {
         val ms = MultiSet<Int>()
         assertThat(ms).isEqualTo(MultiSet<Int>())
+        assertThat(ms.count(1)).isEqualTo(0)
+        assertThat(ms.count(2)).isEqualTo(0)
+        assertThat(ms.distinct()).isEqualTo(setOf<Int>())
+        assertThat(ms.toList()).isEqualTo(listOf<Int>())
 
         ms.add(1)
         assertThat(ms).isEqualTo(MultiSet(1))
         assertThat(ms.count(1)).isEqualTo(1)
         assertThat(ms.count(2)).isEqualTo(0)
+        assertThat(ms.distinct()).isEqualTo(setOf(1))
+        assertThat(ms.toList()).isEqualTo(listOf(1))
 
         ms.add(2)
         assertThat(ms).isEqualTo(MultiSet(1, 2))
         assertThat(ms.count(1)).isEqualTo(1)
         assertThat(ms.count(2)).isEqualTo(1)
+        assertThat(ms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(ms.toList()).isEqualTo(listOf(1, 2))
 
         ms.add(1)
         assertThat(ms).isEqualTo(MultiSet(1, 1, 2))
         assertThat(ms.count(1)).isEqualTo(2)
         assertThat(ms.count(2)).isEqualTo(1)
+        assertThat(ms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(ms.toList()).isEqualTo(listOf(1, 1, 2))
 
         ms.remove(1)
         assertThat(ms).isEqualTo(MultiSet(1, 2))
         assertThat(ms.count(1)).isEqualTo(1)
         assertThat(ms.count(2)).isEqualTo(1)
+        assertThat(ms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(ms.toList()).isEqualTo(listOf(1, 2))
 
         ms.remove(1)
         assertThat(ms).isEqualTo(MultiSet(2))
         assertThat(ms.count(1)).isEqualTo(0)
         assertThat(ms.count(2)).isEqualTo(1)
+        assertThat(ms.distinct()).isEqualTo(setOf(2))
+        assertThat(ms.toList()).isEqualTo(listOf(2))
 
         ms.remove(1)
         assertThat(ms).isEqualTo(MultiSet(2))
         assertThat(ms.count(1)).isEqualTo(0)
         assertThat(ms.count(2)).isEqualTo(1)
+        assertThat(ms.distinct()).isEqualTo(setOf(2))
+        assertThat(ms.toList()).isEqualTo(listOf(2))
     }
 
     @Test
@@ -47,6 +63,8 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(0)
         assertThat(sms.min()).isNull()
         assertThat(sms.max()).isNull()
+        assertThat(sms.distinct()).isEqualTo(setOf<Int>())
+        assertThat(sms.toList()).isEqualTo(listOf<Int>())
 
         sms.add(1)
         assertThat(sms).isEqualTo(SortedMultiSet(1))
@@ -55,6 +73,8 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(0)
         assertThat(sms.min()).isEqualTo(1)
         assertThat(sms.max()).isEqualTo(1)
+        assertThat(sms.distinct()).isEqualTo(setOf(1))
+        assertThat(sms.toList()).isEqualTo(listOf(1))
 
         sms.add(2)
         assertThat(sms).isEqualTo(SortedMultiSet(1, 2))
@@ -63,6 +83,8 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(0)
         assertThat(sms.min()).isEqualTo(1)
         assertThat(sms.max()).isEqualTo(2)
+        assertThat(sms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(sms.toList()).isEqualTo(listOf(1, 2))
 
         sms.add(1)
         assertThat(sms).isEqualTo(SortedMultiSet(1, 1, 2))
@@ -71,6 +93,8 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(0)
         assertThat(sms.min()).isEqualTo(1)
         assertThat(sms.max()).isEqualTo(2)
+        assertThat(sms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(sms.toList()).isEqualTo(listOf(1, 1, 2))
 
         sms.add(3)
         assertThat(sms).isEqualTo(SortedMultiSet(1, 1, 2, 3))
@@ -79,6 +103,8 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(1)
         assertThat(sms.min()).isEqualTo(1)
         assertThat(sms.max()).isEqualTo(3)
+        assertThat(sms.distinct()).isEqualTo(setOf(1, 2, 3))
+        assertThat(sms.toList()).isEqualTo(listOf(1, 1, 2, 3))
 
         sms.remove(3)
         assertThat(sms).isEqualTo(SortedMultiSet(1, 1, 2))
@@ -87,6 +113,8 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(0)
         assertThat(sms.min()).isEqualTo(1)
         assertThat(sms.max()).isEqualTo(2)
+        assertThat(sms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(sms.toList()).isEqualTo(listOf(1, 1, 2))
 
         sms.remove(3)
         assertThat(sms).isEqualTo(SortedMultiSet(1, 1, 2))
@@ -95,5 +123,7 @@ internal class MultiSetKtTest {
         assertThat(sms.count(3)).isEqualTo(0)
         assertThat(sms.min()).isEqualTo(1)
         assertThat(sms.max()).isEqualTo(2)
+        assertThat(sms.distinct()).isEqualTo(setOf(1, 2))
+        assertThat(sms.toList()).isEqualTo(listOf(1, 1, 2))
     }
 }

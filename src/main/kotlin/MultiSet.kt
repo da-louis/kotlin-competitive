@@ -10,6 +10,9 @@ abstract class AbstractMultiSet<K>(map: Map<K, Long>) {
     fun count(k: K) = map[k] ?: 0
     fun isEmpty() = map.isEmpty()
     fun isNotEmpty() = !isEmpty()
+    fun distinct() = map.keys.toSet()
+    fun toList() =
+        map.flatMap { (k, v) -> if (v <= Int.MAX_VALUE) List(v.toInt()) { k } else error("$v is too large.") }
 
     protected fun <K> MutableMap<K, Long>.inc(k: K, v: Long) = merge(k, v, Long::plus)
     protected fun <K> MutableMap<K, Long>.dec(k: K, v: Long) =
