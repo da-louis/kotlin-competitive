@@ -169,7 +169,7 @@ private class Messiah(private val separator: String = System.lineSeparator()) {
     }
 
     fun readString(size: Int): Array<String> = Array(size) { readString() }
-    fun readChars2D(h: Int, w: Int): Array<CharArray> = Array(h) { readString().toCharArray() }
+    fun readChars2D(h: Int): Array<CharArray> = Array(h) { readString().toCharArray() }
     fun readLong(size: Int): LongArray = LongArray(size) { readLong() }
     fun readLong2D(h: Int, w: Int): Array<LongArray> = Array(h) { readLong(w) }
     fun readInt(size: Int): IntArray = IntArray(size) { readInt() }
