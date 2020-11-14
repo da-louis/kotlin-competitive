@@ -1,10 +1,20 @@
 @file:Suppress("unused")
 
-fun main() = FastIO().exec {
+fun main() = Messiah().exec {
     val n = readInt()
 
     println(n)
+
     debug("test")
+
+    debug {
+        var a = 1
+        while (true) {
+            a++
+            System.out.println(a)
+            kotlin.io.println(a)
+        }
+    }
 }
 
 /**
@@ -43,17 +53,22 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
     private var st: java.util.StringTokenizer = java.util.StringTokenizer("")
     private val sb: StringBuilder = StringBuilder()
     private fun prepareNext() = run { if (!st.hasMoreTokens()) st = java.util.StringTokenizer(br.readLine()) }
+    private val enableDebugMode = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
 
     fun readString(): String = run { prepareNext() }.run { st.nextToken() }
     fun readInt(): Int = Integer.valueOf(readString())
     fun readLong(): Long = java.lang.Long.valueOf(readString())
 
+    fun readString(size: Int): Array<String> = Array(size) { readString() }
+    fun readLong(size: Int): LongArray = LongArray(size) { readLong() }
+    fun readInt(size: Int): IntArray = IntArray(size) { readInt() }
+
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun flush() = run { kotlin.io.println(sb); sb.clear() }
-    fun debug(any: Any): Unit =
-        run { if ("ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()) System.err.println(any) }
+    fun debug(any: Any): Unit = run { if (enableDebugMode) System.err.println(any) }
+    fun debug(action: () -> Unit): Unit = run { if (enableDebugMode) action() }
 
     fun exec(action: SimpleFastIOWithToken.() -> Unit) {
         var t: Throwable? = null
@@ -71,8 +86,11 @@ class SimpleFastIOWithToken(private val separator: String = System.lineSeparator
  * TODO add doc
  * TODO add test
  */
-@Suppress("unused", "ClassName", "SpellCheckingInspection", "ConvertToStringTemplate", "MemberVisibilityCanBePrivate")
-class FastIO(private val separator: String = System.lineSeparator()) {
+@Suppress("MemberVisibilityCanBePrivate", "FunctionName", "PropertyName")
+private class Messiah(private val separator: String = System.lineSeparator()) {
+    //////////////////////////////////////////////////
+    // IO
+    //////////////////////////////////////////////////
     private val input = System.`in`
     private val buffer = ByteArray(1024)
     private var pointer = 0
@@ -81,6 +99,7 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     private fun Byte.isPrintable() = this in 33..126
     private fun Byte.isNumeric() = this in '0'.toByte()..'9'.toByte()
     private fun Byte.toNumVal() = if (isNumeric()) this - '0'.toByte() else error("$this is not numeric")
+    private val enableDebugMode = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
 
     private fun hasNextByte(): Boolean {
         return if (pointer < bufferLength) true else {
@@ -129,6 +148,8 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     fun readInt() = readLong()
         .let { if (it in Int.MIN_VALUE..Int.MAX_VALUE) it.toInt() else error("$it is not in range of Int.") }
 
+    fun readIntAsIndex() = readInt().dec()
+
     fun readDouble(): Double {
         var n = 0.0
         var div = 1.0
@@ -147,14 +168,25 @@ class FastIO(private val separator: String = System.lineSeparator()) {
         return if (negative) -n else n
     }
 
+    fun readString(size: Int): Array<String> = Array(size) { readString() }
+    fun readChars2D(h: Int, w: Int): Array<CharArray> = Array(h) { readString().toCharArray() }
+    fun readLong(size: Int): LongArray = LongArray(size) { readLong() }
+    fun readLong2D(h: Int, w: Int): Array<LongArray> = Array(h) { readLong(w) }
+    fun readInt(size: Int): IntArray = IntArray(size) { readInt() }
+    fun readInt2D(h: Int, w: Int): Array<IntArray> = Array(h) { readInt(w) }
+    fun readIntAsIndex(size: Int): IntArray = IntArray(size) { readIntAsIndex() }
+    fun readIntAsIndex2D(h: Int, w: Int): Array<IntArray> = Array(h) { readIntAsIndex(w) }
+    fun readDouble(size: Int): DoubleArray = DoubleArray(size) { readDouble() }
+    fun readDouble2D(h: Int, w: Int): Array<DoubleArray> = Array(h) { readDouble(w) }
+
     fun println(): Unit = run { sb.append(separator) }
     fun print(any: Any): Unit = run { sb.append(any.toString()) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + separator) }
     fun flush() = run { kotlin.io.println(sb); sb.clear() }
-    fun debug(any: Any): Unit =
-        run { if ("ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()) System.err.println(any) }
+    fun debug(any: Any): Unit = run { if (enableDebugMode) System.err.println(any) }
+    fun debug(action: () -> Unit): Unit = run { if (enableDebugMode) action() }
 
-    fun exec(action: FastIO.() -> Unit) {
+    fun exec(action: Messiah.() -> Unit) {
         var t: Throwable? = null
         Thread(null, { action() }, "solve", 128 * 1024 * 1024)
             .apply { setUncaughtExceptionHandler { _, t1 -> t = t1 } }
@@ -164,4 +196,40 @@ class FastIO(private val separator: String = System.lineSeparator()) {
     }
 
     fun readLine(): Nothing = error("readLine is disabled.")
+
+    //////////////////////////////////////////////////
+    // Misc
+    //////////////////////////////////////////////////
+    /**
+     * `[this].indices()` is sugar syntax of `0 until [this]`.
+     */
+    fun Int.indices(): IntRange = 0 until this
+
+    /**
+     * `[index] in [this]` is sugar syntax of `index in 0 until [this]`.
+     */
+    operator fun Int.contains(index: Int): Boolean = index in this.indices()
+
+    /**
+     * make triple. e.g.:`1 to 2 to 3`
+     */
+    fun <A, B, C> Pair<A, B>.to(c: C): Triple<A, B, C> = Triple(this.first, this.second, c)
+
+    fun YesNo(b: Boolean): String = if (b) Yes else No
+    val Yes = "Yes"
+    val No = "No"
+    fun YES_NO(b: Boolean): String = if (b) YES else NO
+    val YES = "YES"
+    val NO = "NO"
+
+    fun IntArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun LongArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun CharArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun <T> Array<T>.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun <T> MutableList<T>.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+
+    fun IntArray.changeMinOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.min(this[i], v) }
+    fun IntArray.changeMaxOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.max(this[i], v) }
+    fun LongArray.changeMinOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.min(this[i], v) }
+    fun LongArray.changeMaxOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.max(this[i], v) }
 }
