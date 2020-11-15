@@ -40,6 +40,47 @@ private class UnionFind(size: LongArray) {
     fun size(x: Int): Long = size[root(x)]
 }
 
+private class AbstractUnionFind<T>(
+    initArray: Array<T>,
+    private val getSize: (T) -> Long,
+    private val merge: (T, T) -> T
+) {
+    //    constructor(initSize: Int,default:T) : this(Array(initSize) {default })
+
+    private val parent: IntArray = IntArray(initArray.size) { it }
+    private val datum: Array<T> = initArray.copyOf()
+
+    fun root(x: Int): Int {
+        if (x == parent[x]) return x
+        val xr = root(parent[x])
+        parent[x] = xr
+        return xr
+    }
+
+    fun rootData(x: Int): T = datum[root(x)]
+
+    fun unite(x: Int, y: Int) {
+        val xr = root(x)
+        val yr = root(y)
+        if (xr == yr) return
+
+        if (getSize(datum[xr]) >= getSize(datum[yr])) {
+            datum[xr] = merge(datum[xr], datum[yr])
+            parent[yr] = xr
+        } else {
+            datum[yr] = merge(datum[yr], datum[xr])
+            parent[xr] = yr
+        }
+    }
+
+    fun isSame(x: Int, y: Int): Boolean = root(x) == root(y)
+
+    fun unite(pair: Pair<Int, Int>): Unit = unite(pair.first, pair.second)
+    fun isSame(pair: Pair<Int, Int>): Boolean = isSame(pair.first, pair.second)
+
+    fun size(x: Int): Long = getSize(datum[root(x)])
+}
+
 /**
  * TODO add doc
  * TODO add test
