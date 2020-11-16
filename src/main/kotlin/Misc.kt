@@ -110,3 +110,8 @@ inline fun <R> Int.indicesMap(transform: (Int) -> R) = this.indices().map(transf
  */
 inline fun <R> Int.indicesMap(x: Int, transform: (Int, Int) -> R) =
     this.indicesMap { y1 -> x.indicesMap { x1 -> transform(y1, x1) } }
+
+/**
+ * e.g.: `10 e 9`
+ */
+infix fun Int.e(p: Int) = this.toBigInteger().pow(p).toInt()
