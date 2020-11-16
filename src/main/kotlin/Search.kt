@@ -62,3 +62,79 @@ inline fun <reified T> searchAllPatterns(patterns: Array<T>, length: Int, action
         action(array)
     }
 }
+
+/**
+ * TODO add doc
+ * TODO sequenceにしたら早くなる？？
+ */
+fun <T> permutations(source: List<T>): List<List<T>> {
+    val n = source.size
+    if (n == 1) return listOf(source)
+    val result = mutableListOf<List<T>>()
+    val copied = source.toMutableList()
+
+    fun MutableList<T>.swap(x: Int, y: Int) {
+        val temp = this[x]
+        this[x] = this[y]
+        this[y] = temp
+    }
+
+    fun genPerm(currSource: MutableList<T>, currentIndex: Int) {
+        if (currentIndex == n) result.add(currSource.toList())
+        for (i in currentIndex until n) {
+            currSource.swap(currentIndex, i)
+            genPerm(currSource, currentIndex + 1)
+            currSource.swap(currentIndex, i)
+        }
+    }
+
+    genPerm(copied, 0)
+
+    return result
+}
+
+/**
+ * generate rotated 4 graph clockwise. (0,3,6,9)
+ * TODO add test
+ *
+ * @param graph grid graph
+ * @return [rotated graph, height, width]
+ */
+private inline fun <reified T> generateRotatedGraph(graph: Array<Array<T>>): Array<Triple<Array<Array<T>>, Int, Int>> {
+    val height = graph.size
+    val width = graph.first().size
+    val defaultValue = graph.first().first()
+
+    val graphs = Array(4) { Triple(emptyArray<Array<T>>(), 0, 0) }
+    graphs[0] = Triple(Array(height) { Array(width) { defaultValue } }, height, width)
+    graphs[1] = Triple(Array(width) { Array(height) { defaultValue } }, width, height)
+    graphs[2] = Triple(Array(height) { Array(width) { defaultValue } }, height, width)
+    graphs[3] = Triple(Array(width) { Array(height) { defaultValue } }, width, height)
+
+    for (y in 0 until height) for (x in 0 until width) {
+        graph[y][x].let {
+            graphs[0].first[y][x] = it
+            graphs[1].first[x][width - y - 1] = it
+            graphs[2].first[height - y - 1][width - x - 1] = it
+            graphs[3].first[height - x - 1][y] = it
+        }
+    }
+
+    return graphs
+}
+
+/**
+ * generate rotated grid-graph clockwise. (90 degree)
+ * TODO add test
+ *
+ * @param graph grid-graph
+ * @return rotated grid-graph
+ */
+private inline fun <reified T> rotateRight(graph: Array<Array<T>>): Array<Array<T>> {
+    val h = graph.size
+    val w = graph.first().size
+    val defaultValue = graph.first().first()
+    val rotated = Array(w) { Array(h) { defaultValue } }
+    for (y in 0 until h) for (x in 0 until w) rotated[x][h - y - 1] = graph[y][x]
+    return rotated
+}
