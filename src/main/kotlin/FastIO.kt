@@ -151,6 +151,7 @@ private class Messiah(private val separator: String = System.lineSeparator()) {
     fun readIntAsIndex() = readInt().dec()
 
     fun readDouble(): Double {
+        hasNextOrError()
         var n = 0.0
         var div = 1.0
         var negative = false
