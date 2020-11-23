@@ -688,9 +688,9 @@ private class Messiah_${NAME}(mod: Int) {
 
     fun Char.caseToIndexedValue(): Int = this - 'a'
 
-    fun Char.isLowerCase() = this in 'a'..'z'
-
-    fun Char.isUpperCase() = this in 'A'..'Z'
+//    fun Char.isLowerCase() = this in 'a'..'z'
+//
+//    fun Char.isUpperCase() = this in 'A'..'Z'
 
     /**
      * make triple. e.g.:`1 to 2 to 3`
