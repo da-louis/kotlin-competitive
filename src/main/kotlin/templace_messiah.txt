@@ -1,0 +1,719 @@
+#if (${PACKAGE_NAME} && ${PACKAGE_NAME} != "") package ${PACKAGE_NAME}#end
+
+fun main() = ${NAME}()
+
+@OptIn(ExperimentalStdlibApi::class)
+fun #[[$END$]]#${NAME}() = Messiah_${NAME}().exec {
+
+
+    val answer = 0
+
+    println(answer)
+}
+
+// region kokokara template dayo (^o^)
+@Suppress("MemberVisibilityCanBePrivate","ClassName", "FunctionName", "PropertyName", "unused")
+private class Messiah_${NAME}(mod: Int = 1_000_000_007) {
+    //////////////////////////////////////////////////
+    // IO
+    //////////////////////////////////////////////////
+    private val input = System.`in`
+    private val buffer = ByteArray(1024)
+    private var pointer = 0
+    private var bufferLength = 0
+    private val sb = StringBuilder()
+    private fun Byte.isPrintable() = this in 33..126
+    private fun Byte.isNumeric() = this in '0'.toByte()..'9'.toByte()
+    private fun Byte.toNumVal() = if (this.isNumeric()) this - '0'.toByte() else error("${DS}this is not numeric")
+    private val enableDebugMode = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
+    private val lineSeparator: String = System.lineSeparator()
+
+    private fun hasNextByte(): Boolean {
+        return if (pointer < bufferLength) true else {
+            pointer = 0
+            bufferLength = input.read(buffer)
+            bufferLength > 0
+        }
+    }
+
+    private fun readByte(): Byte = if (hasNextByte()) buffer[pointer++] else -1
+    private fun skipUnprintable() = run { while (hasNextByte() && !buffer[pointer].isPrintable()) pointer++ }
+    private fun hasNext(): Boolean = run { skipUnprintable() }.run { hasNextByte() }
+    private fun hasNextOrError() = if (!hasNext()) error("has no next element.") else Unit
+
+    fun readString(): String {
+        hasNextOrError()
+        val sb = StringBuilder()
+        var b = readByte()
+        while (b.isPrintable()) {
+            sb.appendCodePoint(b.toInt())
+            b = readByte()
+        }
+        return sb.toString()
+    }
+
+    fun readLong(): Long {
+        hasNextOrError()
+        var n = 0L
+        var negative = false
+        var b = readByte()
+        if (b == '-'.toByte()) {
+            negative = true
+            b = readByte()
+        }
+        if (!b.isNumeric()) error("${DS}b is not numeric.")
+        while (true) {
+            when {
+                b.isNumeric() -> n = n * 10 + b.toNumVal()
+                b.toInt() == -1 || !b.isPrintable() -> return if (negative) -n else n
+                else -> error("failed to parse. [n=${DS}n, b=${DS}b]")
+            }
+            b = readByte()
+        }
+    }
+
+    fun readInt() = readLong()
+        .let { if (it in Int.MIN_VALUE..Int.MAX_VALUE) it.toInt() else error("${DS}it is not in range of Int.") }
+
+    fun readIntAsIndex() = readInt().dec()
+
+    fun readDouble(): Double {
+        hasNextOrError()
+        var n = 0.0
+        var div = 1.0
+        var negative = false
+        var b = readByte()
+        if (b == '-'.toByte()) {
+            negative = true
+            b = readByte()
+        }
+        do n = n * 10 + b.toNumVal()
+        while (run { b = readByte() }.run { b.isNumeric() })
+        if (b == '.'.toByte()) {
+            while (run { b = readByte() }.run { b.isNumeric() })
+                n += b.toNumVal() / (run { div *= 10 }.run { div })
+        }
+        return if (negative) -n else n
+    }
+
+    fun readString(size: Int): Array<String> = Array(size) { readString() }
+    fun readChars(h: Int, w: Int): Array<CharArray> = Array(h) { readString().toCharArray() }
+    fun readLong(size: Int): LongArray = LongArray(size) { readLong() }
+    fun readLong(h: Int, w: Int): Array<LongArray> = Array(h) { readLong(w) }
+    fun readInt(size: Int): IntArray = IntArray(size) { readInt() }
+    fun readInt(h: Int, w: Int): Array<IntArray> = Array(h) { readInt(w) }
+    fun readIntAsIndex(size: Int): IntArray = IntArray(size) { readIntAsIndex() }
+    fun readIntAsIndex(h: Int, w: Int): Array<IntArray> = Array(h) { readIntAsIndex(w) }
+    fun readDouble(size: Int): DoubleArray = DoubleArray(size) { readDouble() }
+    fun readDouble(h: Int, w: Int): Array<DoubleArray> = Array(h) { readDouble(w) }
+    fun readBooleanWithSeparator(size: Int, trueElement: String): BooleanArray =
+        BooleanArray(size) { readString() == trueElement }
+
+    fun readBooleanWithSeparator(h: Int, w: Int, trueElement: String): Array<BooleanArray> =
+        Array(h) { readBooleanWithSeparator(w, trueElement) }
+
+    fun readBooleanWithoutSeparator(size: Int, trueElement: Char): BooleanArray =
+        readString().map { it == trueElement }.toBooleanArray()
+
+    fun readBooleanWithoutSeparator(h: Int, w: Int, trueElement: Char): Array<BooleanArray> =
+        Array(h) { readBooleanWithoutSeparator(w, trueElement) }
+
+    fun println(): Unit = run { sb.append(lineSeparator) }
+    fun print(any: Any): Unit = run { sb.append(any.toString()) }
+    fun println(any: Any): Unit = run { sb.append(any.toString() + lineSeparator) }
+    fun flush() = run { kotlin.io.println(sb); sb.clear() }
+    fun debugln(any: Any): Unit = run { if (enableDebugMode) System.err.println(any) }
+    fun debugln(): Unit = run { if (enableDebugMode) System.err.println() }
+    fun debugln(action: () -> Unit): Unit = run { if (enableDebugMode) action() }
+
+    fun exec(action: Messiah_${NAME}.() -> Unit) {
+        var t: Throwable? = null
+        Thread(null, { action() }, "solve", 128 * 1024 * 1024)
+            .apply { setUncaughtExceptionHandler { _, t1 -> t = t1 } }
+            .apply { start() }.join()
+        t?.let { throw it }
+        kotlin.io.print(sb)
+    }
+
+    fun readLine(): Nothing = error("readLine is disabled.")
+
+    //////////////////////////////////////////////////
+    // Mod
+    //////////////////////////////////////////////////
+    class ModIntFactory(private val mod: Int) {
+        private val ma = ModArithmetic.of(mod)
+
+        /**
+         * ModInt を生成する.
+         * 生成された ModInt は、[value] をファクトリ生成時に指定した mod で割った余りを持つ.
+         */
+        fun create(value: Long): ModInt {
+            val v = (value % mod).let { if (it < 0) it + mod else it }
+            return if (ma is ModArithmetic.ModArithmeticMontgomery) {
+                ModInt(ma.generate(v))
+            } else {
+                ModInt(v.toInt())
+            }
+        }
+
+        inner class ModInt(private var rawValue: Int) {
+            val mod = this@ModIntFactory.mod
+
+            val value: Int
+                get() = if (ma is ModArithmetic.ModArithmeticMontgomery) {
+                    ma.reduce(rawValue.toLong())
+                } else {
+                    rawValue
+                }
+
+            operator fun plus(mi: ModInt) = ModInt(ma.add(rawValue, mi.rawValue))
+            operator fun minus(mi: ModInt) = ModInt(ma.sub(rawValue, mi.rawValue))
+            operator fun times(mi: ModInt) = ModInt(ma.mul(rawValue, mi.rawValue))
+            operator fun div(mi: ModInt) = ModInt(ma.div(rawValue, mi.rawValue))
+
+            /** (this * inv) % mod = 1 を満たすような inv を ModInt として生成して返す. */
+            fun inv() = ModInt(ma.inv(rawValue))
+
+            /** (this ^ [b]) % mod の結果を ModInt として生成して返す. */
+            fun pow(b: Long) = ModInt(ma.pow(rawValue, b))
+
+            /** this を this + [mi] に変更する */
+            fun addAsg(mi: ModInt): ModInt {
+                rawValue = ma.add(rawValue, mi.rawValue)
+                return this
+            }
+
+            /** this を this - [mi] に変更する */
+            fun subAsg(mi: ModInt): ModInt {
+                rawValue = ma.sub(rawValue, mi.rawValue)
+                return this
+            }
+
+            /** this を this * [mi] に変更する */
+            fun mulAsg(mi: ModInt): ModInt {
+                rawValue = ma.mul(rawValue, mi.rawValue)
+                return this
+            }
+
+            /** this を this / [mi] に変更する */
+            fun divAsg(mi: ModInt): ModInt {
+                rawValue = ma.div(rawValue, mi.rawValue)
+                return this
+            }
+
+            override fun toString(): String {
+                return value.toString()
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (other is ModInt) {
+                    return mod == other.mod && value == other.value
+                }
+                return false
+            }
+
+            override fun hashCode(): Int {
+                return (1 * 37 + mod) * 37 + value
+            }
+        }
+
+        internal interface ModArithmetic {
+            fun mod(): Int
+            fun add(a: Int, b: Int): Int
+            fun sub(a: Int, b: Int): Int
+            fun mul(a: Int, b: Int): Int
+            fun div(a: Int, b: Int): Int {
+                return mul(a, inv(b))
+            }
+
+            fun inv(a: Int): Int
+            fun pow(a: Int, b: Long): Int
+            class ModArithmetic1 : ModArithmetic {
+                override fun mod(): Int {
+                    return 1
+                }
+
+                override fun add(a: Int, b: Int): Int {
+                    return 0
+                }
+
+                override fun sub(a: Int, b: Int): Int {
+                    return 0
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return 0
+                }
+
+                override fun inv(a: Int): Int {
+                    throw ArithmeticException("divide by zero")
+                }
+
+                override fun pow(a: Int, b: Long): Int {
+                    return 0
+                }
+            }
+
+            class ModArithmetic2 : ModArithmetic {
+                override fun mod(): Int {
+                    return 2
+                }
+
+                override fun add(a: Int, b: Int): Int {
+                    return a xor b
+                }
+
+                override fun sub(a: Int, b: Int): Int {
+                    return a xor b
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return a and b
+                }
+
+                override fun inv(a: Int): Int {
+                    if (a == 0) throw ArithmeticException("divide by zero")
+                    return a
+                }
+
+                override fun pow(a: Int, b: Long): Int {
+                    return if (b == 0L) 1 else a
+                }
+            }
+
+            class ModArithmetic998244353 : ModArithmetic {
+                private val mod = 998244353
+                override fun mod(): Int {
+                    return mod
+                }
+
+                override fun add(a: Int, b: Int): Int {
+                    val res = a + b
+                    return if (res >= mod) res - mod else res
+                }
+
+                override fun sub(a: Int, b: Int): Int {
+                    val res = a - b
+                    return if (res < 0) res + mod else res
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return (a.toLong() * b % mod).toInt()
+                }
+
+                override fun inv(a: Int): Int {
+                    var va = a
+                    var b = mod
+                    var u: Long = 1
+                    var v: Long = 0
+                    while (b >= 1) {
+                        val t = (va / b).toLong()
+                        va -= (t * b).toInt()
+                        val tmp1 = va
+                        va = b
+                        b = tmp1
+                        u -= t * v
+                        val tmp2 = u
+                        u = v
+                        v = tmp2
+                    }
+                    u %= mod.toLong()
+                    if (va != 1) {
+                        throw ArithmeticException("divide by zero")
+                    }
+                    return (if (u < 0) u + mod else u).toInt()
+                }
+
+                override fun pow(a: Int, b: Long): Int {
+                    var vb = b
+                    if (vb < 0) throw ArithmeticException("negative power")
+                    var res: Long = 1
+                    var pow2 = a.toLong()
+                    var idx: Long = 1
+                    while (vb > 0) {
+                        val lsb = vb and -vb
+                        while (lsb != idx) {
+                            pow2 = pow2 * pow2 % mod
+                            idx = idx shl 1
+                        }
+                        res = res * pow2 % mod
+                        vb = vb xor lsb
+                    }
+                    return res.toInt()
+                }
+            }
+
+            class ModArithmetic1000000007 : ModArithmetic {
+                private val mod = 1000000007
+                override fun mod(): Int {
+                    return mod
+                }
+
+                override fun add(a: Int, b: Int): Int {
+                    val res = a + b
+                    return if (res >= mod) res - mod else res
+                }
+
+                override fun sub(a: Int, b: Int): Int {
+                    val res = a - b
+                    return if (res < 0) res + mod else res
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return (a.toLong() * b % mod).toInt()
+                }
+
+                override fun div(a: Int, b: Int): Int {
+                    return mul(a, inv(b))
+                }
+
+                override fun inv(a: Int): Int {
+                    var va = a
+                    var b = mod
+                    var u: Long = 1
+                    var v: Long = 0
+                    while (b >= 1) {
+                        val t = (va / b).toLong()
+                        va -= (t * b).toInt()
+                        val tmp1 = va
+                        va = b
+                        b = tmp1
+                        u -= t * v
+                        val tmp2 = u
+                        u = v
+                        v = tmp2
+                    }
+                    u %= mod.toLong()
+                    if (va != 1) {
+                        throw ArithmeticException("divide by zero")
+                    }
+                    return (if (u < 0) u + mod else u).toInt()
+                }
+
+                override fun pow(a: Int, b: Long): Int {
+                    var vb = b
+                    if (vb < 0) throw ArithmeticException("negative power")
+                    var res: Long = 1
+                    var pow2 = a.toLong()
+                    var idx: Long = 1
+                    while (vb > 0) {
+                        val lsb = vb and -vb
+                        while (lsb != idx) {
+                            pow2 = pow2 * pow2 % mod
+                            idx = idx shl 1
+                        }
+                        res = res * pow2 % mod
+                        vb = vb xor lsb
+                    }
+                    return res.toInt()
+                }
+            }
+
+            class ModArithmeticMontgomery(mod: Int) : ModArithmeticDynamic(mod) {
+                private val negInv: Long
+                private val r2: Long
+                private val r3: Long
+                fun generate(x: Long): Int {
+                    return reduce(x * r2)
+                }
+
+                fun reduce(x: Long): Int {
+                    var vx = x
+                    vx = vx + (vx * negInv and 0xffffffffL) * mod ushr 32
+                    return (if (vx < mod) vx else vx - mod).toInt()
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return reduce(a.toLong() * b)
+                }
+
+                override fun inv(a: Int): Int {
+                    var va = a
+                    va = super.inv(va)
+                    return reduce(va * r3)
+                }
+
+                override fun pow(a: Int, b: Long): Int {
+                    return generate(super.pow(a, b).toLong())
+                }
+
+                init {
+                    var inv: Long = 0
+                    var s: Long = 1
+                    var t: Long = 0
+                    for (i in 0..31) {
+                        if (t and 1 == 0L) {
+                            t += mod.toLong()
+                            inv += s
+                        }
+                        t = t shr 1
+                        s = s shl 1
+                    }
+                    val r = (1L shl 32) % mod
+                    negInv = inv
+                    r2 = r * r % mod
+                    r3 = r2 * r % mod
+                }
+            }
+
+            class ModArithmeticBarrett(mod: Int) : ModArithmeticDynamic(mod) {
+                private val mh: Long
+                private val ml: Long
+                private fun reduce(x: Long): Int {
+                    var vx = x
+                    var z = (vx and mask) * ml
+                    z = (vx and mask) * mh + (vx ushr 32) * ml + (z ushr 32)
+                    z = (vx ushr 32) * mh + (z ushr 32)
+                    vx -= z * mod
+                    return (if (vx < mod) vx else vx - mod).toInt()
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return reduce(a.toLong() * b)
+                }
+
+                companion object {
+                    private const val mask = 0xffffffffL
+                }
+
+                init {
+                    /**
+                     * m = floor(2^64/mod)
+                     * 2^64 = p*mod + q, 2^32 = a*mod + b
+                     * => (a*mod + b)^2 = p*mod + q
+                     * => p = mod*a^2 + 2ab + floor(b^2/mod)
+                     */
+                    val a = (1L shl 32) / mod
+                    val b = (1L shl 32) % mod
+                    val m = a * a * mod + 2 * a * b + b * b / mod
+                    mh = m ushr 32
+                    ml = m and mask
+                }
+            }
+
+            open class ModArithmeticDynamic(val mod: Int) : ModArithmetic {
+                override fun mod(): Int {
+                    return mod
+                }
+
+                override fun add(a: Int, b: Int): Int {
+                    val sum = a + b
+                    return if (sum >= mod) sum - mod else sum
+                }
+
+                override fun sub(a: Int, b: Int): Int {
+                    val sum = a - b
+                    return if (sum < 0) sum + mod else sum
+                }
+
+                override fun mul(a: Int, b: Int): Int {
+                    return (a.toLong() * b % mod).toInt()
+                }
+
+                override fun inv(a: Int): Int {
+                    var va = a
+                    var b = mod
+                    var u: Long = 1
+                    var v: Long = 0
+                    while (b >= 1) {
+                        val t = (va / b).toLong()
+                        va -= (t * b).toInt()
+                        val tmp1 = va
+                        va = b
+                        b = tmp1
+                        u -= t * v
+                        val tmp2 = u
+                        u = v
+                        v = tmp2
+                    }
+                    u %= mod.toLong()
+                    if (va != 1) {
+                        throw ArithmeticException("divide by zero")
+                    }
+                    return (if (u < 0) u + mod else u).toInt()
+                }
+
+                override fun pow(a: Int, b: Long): Int {
+                    var vb = b
+                    if (vb < 0) throw ArithmeticException("negative power")
+                    var res = 1
+                    var pow2 = a
+                    var idx: Long = 1
+                    while (vb > 0) {
+                        val lsb = vb and -vb
+                        while (lsb != idx) {
+                            pow2 = mul(pow2, pow2)
+                            idx = idx shl 1
+                        }
+                        res = mul(res, pow2)
+                        vb = vb xor lsb
+                    }
+                    return res
+                }
+            }
+
+            companion object {
+                fun of(mod: Int): ModArithmetic {
+                    return when {
+                        mod <= 0 -> throw IllegalArgumentException()
+                        mod == 1 -> ModArithmetic1()
+                        mod == 2 -> ModArithmetic2()
+                        mod == 998244353 -> ModArithmetic998244353()
+                        mod == 1000000007 -> ModArithmetic1000000007()
+                        mod and 1 == 1 -> ModArithmeticMontgomery(mod)
+                        else -> ModArithmeticBarrett(mod)
+                    }
+                }
+            }
+        }
+    }
+
+    val modArithmetic = ModIntFactory.ModArithmetic.of(mod)
+    fun Int.plusMod(b: Int): Int = modArithmetic.add(this, b)
+    fun Int.minusMod(b: Int): Int = modArithmetic.sub(this, b)
+    fun Int.timesMod(b: Int): Int = modArithmetic.mul(this, b)
+    fun Int.divMod(b: Int): Int = modArithmetic.div(this, b)
+    fun Int.invMod(): Int = modArithmetic.inv(this)
+    fun Int.powMod(b: Long): Int = modArithmetic.pow(this, b)
+    val modValue: Int get() = modArithmetic.mod()
+
+    //////////////////////////////////////////////////
+    // Misc
+    //////////////////////////////////////////////////
+    /**
+     * `n.indices()` is sugar syntax of `0 until n`.
+     */
+    val Int.indices: IntRange get() = 0 until this
+
+    /**
+     * `[index] in [this]` is sugar syntax of `index in 0 until [this]`.
+     */
+    operator fun Int.contains(index: Int): Boolean = index in this.indices
+
+    /**
+     * `[this].mapIndices { transform }` is sugar syntax of `(0 until [this]).map{ transform(it) }`.
+     */
+    inline fun <R> Int.mapIndices(transform: (Int) -> R): List<R> = this.indices.map(transform)
+
+    /**
+     * `[this].mapIndices(x) { transform }` is sugar syntax of
+     * `(0 until [this]).map{ y1-> (0 until [x]).map { x1-> transform(y1,x1) } }`.
+     */
+    inline fun <R> Int.mapIndices(x: Int, transform: (Int, Int) -> R): List<List<R>> =
+        this.mapIndices { y1 -> x.mapIndices { x1 -> transform(y1, x1) } }
+
+    /**
+     * `[this].mapIndices(x) { transform }` is sugar syntax of
+     * `(0 until [this]).map{ y1-> (0 until [x]).map { x1-> transform(y1,x1) } }`.
+     */
+    inline fun <R> Int.flatMapIndices(x: Int, transform: (Int, Int) -> R): List<R> =
+        this.indices.flatMap { y1 -> x.mapIndices { x1 -> transform(y1, x1) } }
+
+    /**
+     * `[this].forEachIndices { transform }` is sugar syntax of `(0 until [this]).map{ transform(it) }`.
+     */
+    inline fun Int.forEachIndices(transform: (Int) -> Unit): Unit = this.indices.forEach(transform)
+
+    /**
+     * `[this].forEachIndices(x) { transform }` is sugar syntax of
+     * `(0 until [this]).map{ y1-> (0 until [x]).map { x1-> transform(y1,x1) } }`.
+     */
+    inline fun Int.forEachIndices(x: Int, transform: (Int, Int) -> Unit): Unit =
+        this.forEachIndices { y1 -> x.forEachIndices { x1 -> transform(y1, x1) } }
+
+    /**
+     * get characters numeric value.
+     * e.g.: '0' to 0
+     */
+    fun Char.toNumVal(): Int = this-'0'
+
+    fun Char.isLowerCase() = this in 'a'..'z'
+
+    fun Char.isUpperCase() = this in 'A'..'Z'
+
+    /**
+     * make triple. e.g.:`1 to 2 to 3`
+     */
+    infix fun <A, B, C> Pair<A, B>.to(c: C): Triple<A, B, C> = Triple(this.first, this.second, c)
+
+    fun YesNo(b: Boolean): String = if (b) Yes else No
+    val Yes = "Yes"
+    val No = "No"
+    fun YES_NO(b: Boolean): String = if (b) YES else NO
+    val YES = "YES"
+    val NO = "NO"
+
+    fun IntArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun LongArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun CharArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun <T> Array<T>.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun <T> MutableList<T>.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+
+    fun IntArray.changeMinOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.min(this[i], v) }
+    fun IntArray.changeMaxOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.max(this[i], v) }
+    fun LongArray.changeMinOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.min(this[i], v) }
+    fun LongArray.changeMaxOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.max(this[i], v) }
+
+    fun IntArray.plusAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].plusMod(v) }
+    fun IntArray.minusAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].minusMod(v) }
+    fun IntArray.timesAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].timesMod(v) }
+    fun IntArray.divAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].divMod(v) }
+    fun IntArray.powAssignMod(i: Int, v: Long): Unit = run { this[i] = this[i].powMod(v) }
+
+    fun LongArray.plusAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % modValue).toInt().plusMod(v).toLong()
+    }
+
+    fun LongArray.minusAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % modValue).toInt().minusMod(v).toLong()
+    }
+
+    fun LongArray.timesAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % modValue).toInt().timesMod(v).toLong()
+    }
+
+    fun LongArray.divAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % modValue).toInt().divMod(v).toLong()
+    }
+
+    fun LongArray.powAssignMod(i: Int, v: Long): Unit = run {
+        this[i] = (this[i] % modValue).toInt().powMod(v).toLong()
+    }
+
+    /**
+     * same usage as `IntArray.scan`, but it will faster than that.
+     */
+    inline fun IntArray.scanArray(initial: Int, operation: (acc: Int, Int) -> Int): IntArray {
+        val accumulator = IntArray(this.size + 1).apply { this[0] = initial }
+        for (i in this.indices) accumulator[i + 1] = operation(accumulator[i], this[i])
+        return accumulator
+    }
+
+    /**
+     * same usage as `LongArray.scan`, but it will faster than that.
+     */
+    inline fun LongArray.scanArray(initial: Long, operation: (acc: Long, Long) -> Long): LongArray {
+        val accumulator = LongArray(this.size + 1).apply { this[0] = initial }
+        for (i in this.indices) accumulator[i + 1] = operation(accumulator[i], this[i])
+        return accumulator
+    }
+
+    /**
+     * same usage as `IntArray.scanReduce`, but it will faster than that.
+     */
+    inline fun IntArray.scanReduceArray(operation: (acc: Int, Int) -> Int): IntArray {
+        val accumulator = IntArray(this.size).apply { this[0] = this@scanReduceArray[0] }
+        for (i in 1..this.lastIndex) accumulator[i] = operation(accumulator[i - 1], this[i])
+        return accumulator
+    }
+
+    /**
+     * same usage as `LongArray.scanReduce`, but it will faster than that.
+     */
+    inline fun LongArray.scanReduceArray(operation: (acc: Long, Long) -> Long): LongArray {
+        val accumulator = LongArray(this.size).apply { this[0] = this@scanReduceArray[0] }
+        for (i in 1..this.lastIndex) accumulator[i] = operation(accumulator[i - 1], this[i])
+        return accumulator
+    }
+}
+// endregion kokomade template dayo (^o^)
