@@ -28,7 +28,7 @@ private class Mint(value: Long = 0L) {
     operator fun div(other: Long) = this.times(modPow(other, MOD - 2))
     operator fun div(other: Mint) = this.div(other.value)
     fun mod(mod: Long) = Mint(this.value % mod)
-    fun modPow(other: Long) = Mint(modPow(this.value, other))
+    fun pow(other: Long) = Mint(modPow(this.value, other))
     fun toLong() = this.value
     override fun toString() = this.value.toString()
     override fun hashCode() = value.hashCode()
@@ -40,6 +40,11 @@ private class Mint(value: Long = 0L) {
     }
 
     companion object {
+        val ZERO = Mint(0)
+        val ONE = Mint(1)
+        val TWO = Mint(2)
+        val TEN = Mint(10)
+
         private fun modPow(n: Long, p: Long): Long {
             var x = n % MOD
             var y = p
