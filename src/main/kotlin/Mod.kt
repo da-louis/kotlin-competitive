@@ -11,7 +11,7 @@ private fun Int.toMint() = Mint(this.toLong())
  * TODO add test case
  */
 @Suppress("unused")
-private class Mint(value: Long = 0L) {
+private class Mint(value: Long) {
     constructor(other: Mint) : this(other.value)
 
     private val value = (value % MOD).let { if (it < 0) it + MOD else it }
