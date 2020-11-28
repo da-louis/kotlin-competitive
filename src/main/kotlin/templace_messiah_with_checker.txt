@@ -21,7 +21,7 @@ private fun solve() = Messiah_${NAME}(mod).exec {
 private const val mod = 1_000_000_007
 
 // region kokokara template dayo (^o^)
-private const val execChecker = true
+private const val execChecker = false
 private val localEnv = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
 private fun checker() = Messiah_${NAME}(mod).exec {
     debugln("${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}")
