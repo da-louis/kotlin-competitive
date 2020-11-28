@@ -10,7 +10,7 @@ fun main() = if (localEnv && execChecker) checker() else ${NAME}()
 fun #[[$END$]]#${NAME}() = solve()
 
 @OptIn(ExperimentalStdlibApi::class)
-private fun solve() = Messiah_${NAME}(mod).exec {
+private fun solve() = Messiah_${NAME}(MOD).exec {
 
 
     val answer = 0
@@ -18,12 +18,12 @@ private fun solve() = Messiah_${NAME}(mod).exec {
     println(answer)
 }
 
-private const val mod = 1_000_000_007
+private const val MOD = 1_000_000_007
 
 // region kokokara template dayo (^o^)
 private const val execChecker = false
 private val localEnv = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
-private fun checker() = Messiah_${NAME}(mod).exec {
+private fun checker() = Messiah_${NAME}(MOD).exec {
     debugln("${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}")
     debugln("${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}  executing check mode.  ${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}")
     debugln("${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}")
@@ -65,7 +65,7 @@ private fun checker() = Messiah_${NAME}(mod).exec {
     }
 }
 
-private fun greedy() = Messiah_${NAME}(mod).exec {
+private fun greedy() = Messiah_${NAME}(MOD).exec {
     TODO()
 }
 
