@@ -199,6 +199,11 @@ private class Messiah_${NAME}(mod: Int) {
     //////////////////////////////////////////////////
     // Mod
     //////////////////////////////////////////////////
+    /**
+     * ModInt を生成するためのファクトリ.
+     *
+     * convert from [AtCoderLibraryForJava - FenwickTree](https://github.com/NASU41/AtCoderLibraryForJava/blob/24160d880a5fc6d1caf9b95baa875e47fb568ef3/FenwickTree/FenwickTree.java)
+     */
     class ModIntFactory(private val mod: Int) {
         private val ma = ModArithmetic.of(mod)
 
@@ -214,6 +219,8 @@ private class Messiah_${NAME}(mod: Int) {
                 ModInt(v.toInt())
             }
         }
+
+        fun create(value: Int): ModInt = create(value.toLong())
 
         inner class ModInt(private var rawValue: Int) {
             val mod = this@ModIntFactory.mod
@@ -276,7 +283,7 @@ private class Messiah_${NAME}(mod: Int) {
             }
         }
 
-        internal interface ModArithmetic {
+        private interface ModArithmetic {
             fun mod(): Int
             fun add(a: Int, b: Int): Int
             fun sub(a: Int, b: Int): Int
@@ -627,14 +634,14 @@ private class Messiah_${NAME}(mod: Int) {
         }
     }
 
-    val modArithmetic = ModIntFactory.ModArithmetic.of(mod)
-    fun Int.plusMod(b: Int): Int = modArithmetic.add(this, b)
-    fun Int.minusMod(b: Int): Int = modArithmetic.sub(this, b)
-    fun Int.timesMod(b: Int): Int = modArithmetic.mul(this, b)
-    fun Int.divMod(b: Int): Int = modArithmetic.div(this, b)
-    fun Int.invMod(): Int = modArithmetic.inv(this)
-    fun Int.powMod(b: Long): Int = modArithmetic.pow(this, b)
-    val mod: Int get() = modArithmetic.mod()
+    val modIntFactory: ModIntFactory = ModIntFactory(mod)
+
+    fun Int.plusMod(b: Int): Int = modIntFactory.create(this).addAsg(modIntFactory.create(b)).value
+    fun Int.minusMod(b: Int): Int = modIntFactory.create(this).subAsg(modIntFactory.create(b)).value
+    fun Int.timesMod(b: Int): Int = modIntFactory.create(this).mulAsg(modIntFactory.create(b)).value
+    fun Int.divMod(b: Int): Int = modIntFactory.create(this).divAsg(modIntFactory.create(b)).value
+    fun Int.invMod(): Int = modIntFactory.create(this).inv().value
+    fun Int.powMod(b: Long): Int = modIntFactory.create(this).pow(b).value
 
     //////////////////////////////////////////////////
     // Misc
