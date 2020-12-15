@@ -203,15 +203,15 @@ private class Messiah_${NAME}(private val mod: Int) {
     fun Long.minusMod(b: Long): Long = (this % mod - b % mod + mod) % mod
     fun Long.timesMod(b: Long): Long = (this % mod) * (b % mod) % mod
     fun Long.divMod(b: Long): Long = this.timesMod(b.inv())
-    fun Long.invMod(): Long = this.powMod(MOD-2L)
+    fun Long.invMod(): Long = this.powMod(mod-2L)
     fun Long.powMod(b: Long): Long {
-        var x = this % MOD
+        var x = this % mod
         var y = b
         var result = 1L
         while (y > 0) {
-            if (y % 2 == 1L) result = (result * x) % MOD
+            if (y % 2 == 1L) result = (result * x) % mod
             y = y shr 1
-            x = (x * x) % MOD
+            x = (x * x) % mod
         }
         return result
     }
