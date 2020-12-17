@@ -187,7 +187,7 @@ private class Messiah_${NAME}(private val mod: Int) {
 
     fun exec(action: Messiah_${NAME}.() -> Unit) {
         var t: Throwable? = null
-        Thread(null, { action() }, "sandbox.test.solve", 128 * 1024 * 1024)
+        Thread(null, { action() }, "solve", 128 * 1024 * 1024)
             .apply { setUncaughtExceptionHandler { _, t1 -> t = t1 } }
             .apply { start() }.join()
         t?.let { throw it }
