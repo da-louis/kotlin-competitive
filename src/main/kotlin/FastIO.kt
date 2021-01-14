@@ -262,4 +262,66 @@ private class Messiah(private val separator: String = System.lineSeparator()) {
     fun IntArray.changeMaxOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.max(this[i], v) }
     fun LongArray.changeMinOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.min(this[i], v) }
     fun LongArray.changeMaxOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.max(this[i], v) }
+
+    fun IntArray.plusAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].plusMod(v) }
+    fun IntArray.minusAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].minusMod(v) }
+    fun IntArray.timesAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].timesMod(v) }
+    fun IntArray.divAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].divMod(v) }
+    fun IntArray.powAssignMod(i: Int, v: Long): Unit = run { this[i] = this[i].powMod(v) }
+
+    fun LongArray.plusAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % mod).toInt().plusMod(v).toLong()
+    }
+
+    fun LongArray.minusAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % mod).toInt().minusMod(v).toLong()
+    }
+
+    fun LongArray.timesAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % mod).toInt().timesMod(v).toLong()
+    }
+
+    fun LongArray.divAssignMod(i: Int, v: Int): Unit = run {
+        this[i] = (this[i] % mod).toInt().divMod(v).toLong()
+    }
+
+    fun LongArray.powAssignMod(i: Int, v: Long): Unit = run {
+        this[i] = (this[i] % mod).toInt().powMod(v).toLong()
+    }
+
+    /**
+     * same usage as `IntArray.scan`, but it will faster than that.
+     */
+    inline fun IntArray.scanArray(initial: Int, operation: (acc: Int, Int) -> Int): IntArray {
+        val accumulator = IntArray(this.size + 1).apply { this[0] = initial }
+        for (i in this.indices) accumulator[i + 1] = operation(accumulator[i], this[i])
+        return accumulator
+    }
+
+    /**
+     * same usage as `LongArray.scan`, but it will faster than that.
+     */
+    inline fun LongArray.scanArray(initial: Long, operation: (acc: Long, Long) -> Long): LongArray {
+        val accumulator = LongArray(this.size + 1).apply { this[0] = initial }
+        for (i in this.indices) accumulator[i + 1] = operation(accumulator[i], this[i])
+        return accumulator
+    }
+
+    /**
+     * same usage as `IntArray.scanReduce`, but it will faster than that.
+     */
+    inline fun IntArray.scanReduceArray(operation: (acc: Int, Int) -> Int): IntArray {
+        val accumulator = IntArray(this.size).apply { this[0] = this@scanReduceArray[0] }
+        for (i in 1..this.lastIndex) accumulator[i] = operation(accumulator[i - 1], this[i])
+        return accumulator
+    }
+
+    /**
+     * same usage as `LongArray.scanReduce`, but it will faster than that.
+     */
+    inline fun LongArray.scanReduceArray(operation: (acc: Long, Long) -> Long): LongArray {
+        val accumulator = LongArray(this.size).apply { this[0] = this@scanReduceArray[0] }
+        for (i in 1..this.lastIndex) accumulator[i] = operation(accumulator[i - 1], this[i])
+        return accumulator
+    }
 }
