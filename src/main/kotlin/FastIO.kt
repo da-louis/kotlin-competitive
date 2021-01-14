@@ -199,6 +199,35 @@ private class Messiah(private val separator: String = System.lineSeparator()) {
     fun readLine(): Nothing = error("readLine is disabled.")
 
     //////////////////////////////////////////////////
+    // Mod
+    //////////////////////////////////////////////////
+    fun Long.takeMod(): Long = (this % mod).let { if (it < 0) it + mod else it }
+    fun Long.plusMod(b: Long): Long = (this.takeMod() + b.takeMod()).takeMod()
+    fun Long.minusMod(b: Long): Long = this.plusMod(-b)
+    fun Long.timesMod(b: Long): Long = (this.takeMod() * b.takeMod()).takeMod()
+    fun Long.divMod(b: Long): Long = this.timesMod(b.inv())
+    fun Long.invMod(): Long = this.powMod(mod - 2L)
+    fun Long.powMod(b: Long): Long {
+        var x = this % mod
+        var y = b
+        var result = 1L
+        while (y > 0) {
+            if (y % 2 == 1L) result = (result * x) % mod
+            y = y shr 1
+            x = (x * x) % mod
+        }
+        return result
+    }
+
+    fun Int.takeMod(): Int = this.toLong().takeMod().toInt()
+    fun Int.plusMod(b: Int): Int = this.toLong().plusMod(b.toLong()).toInt()
+    fun Int.minusMod(b: Int): Int = this.toLong().minusMod(b.toLong()).toInt()
+    fun Int.timesMod(b: Int): Int = this.toLong().timesMod(b.toLong()).toInt()
+    fun Int.divMod(b: Int): Int = this.toLong().divMod(b.toLong()).toInt()
+    fun Int.invMod(): Int = this.toLong().invMod().toInt()
+    fun Int.powMod(b: Long): Int = this.toLong().powMod(b).toInt()
+
+    //////////////////////////////////////////////////
     // Misc
     //////////////////////////////////////////////////
     /**
