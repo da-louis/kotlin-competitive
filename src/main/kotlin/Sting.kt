@@ -1,5 +1,6 @@
 import kotlin.math.max
 
+// TODO DP配列を返すほうが使い勝手良さそう、復元も別メソッドで込にする？
 fun getLcsLength(s: String, t: String): Int {
     val lcs = Array(s.length + 1) { IntArray(t.length + 1) }
 
@@ -10,25 +11,24 @@ fun getLcsLength(s: String, t: String): Int {
     return lcs.last().last()
 }
 
-fun runLengthEncode(s: String): List<Pair<Char, Int>> {
-    if (s.isEmpty()) return emptyList()
-
-    val result = mutableListOf<Pair<Char, Int>>()
-    var beforeChar = s.first()
-    var length = 1
-    fun addToResult() = result.add(beforeChar to length)
-
-    for (c in s.drop(1)) {
-        if (c == beforeChar) length++ else {
+fun <T> runLengthEncode(list: List<T>): List<Pair<T, Int>> {
+    if (list.isEmpty()) return emptyList()
+    val result = mutableListOf<Pair<T, Int>>()
+    var last = list.first()
+    var length = 0
+    fun addToResult() = result.add(last to length)
+    for ((i, t) in list.withIndex()) {
+        if (t != last) {
             addToResult()
-            beforeChar = c
             length = 1
-        }
+        } else length++
+        last = t
+        if (i == list.lastIndex) addToResult()
     }
-    addToResult()
-
     return result
 }
+
+fun runLengthEncode(s: String): List<Pair<Char, Int>> = runLengthEncode(s.toList())
 
 fun runLengthDecode(runLengthEncoded: List<Pair<Char, Int>>): String {
     val result = StringBuilder()

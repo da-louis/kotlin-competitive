@@ -1,26 +1,23 @@
 @file:Suppress("unused")
 
 // in this implementation, treating MOD as const.
-private const val MOD = 1_000_000_007L
+private const val MOD = 1_000_000_007
 
 /**
  * TODO add doc
  * TODO add test
  */
-private class BiCoef(max: Int) {
+// TODO 必要に応じて内部データを拡張していく作りにしたい
+private class BinomialCoefficient(max: Int) {
     private val fact = LongArray(max + 1)
     private val fInv = LongArray(max + 1)
     private val inv = LongArray(max + 1)
 
     init {
-        fact[0] = 1
-        fact[1] = 1
-        fInv[0] = 1
-        fInv[1] = 1
-        inv[1] = 1
+        fact[0] = 1; fact[1] = 1; fInv[0] = 1; fInv[1] = 1; inv[1] = 1
         for (i in 2..max) {
             fact[i] = fact[i - 1] * i % MOD
-            inv[i] = MOD - inv[(MOD % i).toInt()] * (MOD / i) % MOD
+            inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD
             fInv[i] = fInv[i - 1] * inv[i] % MOD
         }
     }

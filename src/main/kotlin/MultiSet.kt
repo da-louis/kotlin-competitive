@@ -1,6 +1,7 @@
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class AbstractMultiSet<K>(map: Map<K, Long>) {
-    protected open val map: MutableMap<K, Long> = map.toMutableMap()
+    open val map: MutableMap<K, Long> = map.toMutableMap()
+    val size: Int get() = map.size
 
     fun add(k: K, v: Long = 1) = map.inc(k, v)
     fun remove(k: K, v: Long = 1) = map.dec(k, v)

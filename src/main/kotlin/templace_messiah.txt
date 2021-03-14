@@ -25,7 +25,7 @@ private class Messiah_${NAME}(mod: Int = 1_000_000_007) {
     private fun Byte.isPrintable() = this in 33..126
     private fun Byte.isNumeric() = this in '0'.toByte()..'9'.toByte()
     private fun Byte.toNumVal() = if (this.isNumeric()) this - '0'.toByte() else error("${DS}this is not numeric")
-    private val enableDebugMode = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
+    private val enableDebugMode = runCatching { "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv() }.getOrNull() ?: false
     private val lineSeparator: String = System.lineSeparator()
 
     private fun hasNextByte(): Boolean {

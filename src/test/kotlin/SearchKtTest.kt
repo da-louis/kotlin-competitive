@@ -127,4 +127,28 @@ internal class SearchKtTest {
             )
         )
     }
+
+    @Test
+    fun addAroundWall() {
+        val grid = arrayOf(
+            "..S".toCharArray(),
+            ".#.".toCharArray(),
+            "G..".toCharArray()
+        )
+
+        val (h, w, newGrid) = addAroundWall(grid, '#')
+
+        assertThat(h).isEqualTo(grid.size + 2)
+        assertThat(w).isEqualTo(grid.first().size + 2)
+
+        assertThat(newGrid).isEqualTo(
+            arrayOf(
+                "#####".toCharArray(),
+                "#..S#".toCharArray(),
+                "#.#.#".toCharArray(),
+                "#G..#".toCharArray(),
+                "#####".toCharArray()
+            )
+        )
+    }
 }

@@ -1,9 +1,10 @@
-data class Vertex(val x: Long, val y: Long)
-data class Edge(val vertex1: Vertex, val vertex2: Vertex)
+private data class PVertex(val x: Long, val y: Long)
+private data class PEdge(val vertex1: PVertex, val vertex2: PVertex)
 
-fun Edge.isIntersectWith(other: Edge) = isIntersected(this.vertex1, this.vertex2, other.vertex1, other.vertex2)
+private fun PEdge.isIntersectWith(other: PEdge) =
+    isIntersected(this.vertex1, this.vertex2, other.vertex1, other.vertex2)
 
-fun isIntersected(a: Vertex, b: Vertex, c: Vertex, d: Vertex): Boolean {
+private fun isIntersected(a: PVertex, b: PVertex, c: PVertex, d: PVertex): Boolean {
     val (ax, ay) = a
     val (bx, by) = b
     val (cx, cy) = c

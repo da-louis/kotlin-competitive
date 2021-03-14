@@ -2,21 +2,20 @@
 
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
 /**
  * O(log(min(a,b)))
  */
-tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
+tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a.absoluteValue else gcd(b, a % b)
+fun gcd(vararg values: Long): Long = values.reduce { acc, l -> gcd(acc, l) }
 
 /**
  * O(log(min(a,b)))
  */
-fun lcm(a: Long, b: Long): Long {
-    tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
-    return a / gcd(a, b) * b
-}
+fun lcm(a: Long, b: Long): Long = a.absoluteValue / gcd(a, b) * b.absoluteValue
 
 /**
  * O(sqrt(max))
@@ -178,9 +177,91 @@ tailrec fun Long.divCount(x: Long, count: Int = 0): Int {
 
 fun sigma(to: Long): Long = sigma(0, to)
 
+@Suppress("SameParameterValue")
 fun sigma(from: Long, to: Long): Long {
-    check(0 <= to && from in 0..to)
+    if (to < 0 || from !in 0..to) return 0L
     return (to + 1) * to / 2 - (from - 1) * from / 2
+}
+
+/**
+ * 正の方向へ丸める割り算
+ */
+fun Int.ceilDiv(b: Int): Int = this.also { check(b != 0) }.run {
+    when {
+        b < 0 -> (-this).ceilDiv(-b)
+        this > 0 -> ((this + b - 1) / b)
+        else -> (this / b)
+    }
+}
+
+/**
+ * 負の方向へ丸める割り算
+ */
+fun Int.floorDiv(b: Int): Int = -(-this).ceilDiv(b)
+
+/**
+ * 正の方向へ丸める割り算
+ */
+fun Long.ceilDiv(b: Long): Long = this.also { check(b != 0L) }.run {
+    when {
+        b < 0 -> (-this).ceilDiv(-b)
+        this > 0 -> ((this + b - 1) / b)
+        else -> (this / b)
+    }
+}
+
+/**
+ * 負の方向へ丸める割り算
+ */
+fun Long.floorDiv(b: Long): Long = -(-this).ceilDiv(b)
+
+/**
+ * 0から離れている方向の[b]の倍数へ切り上げる
+ */
+fun Long.ceilMultipleOf(b: Long): Long = this / b * b + if (this % b == 0L) 0L else b
+
+/**
+ * `[a]x + [b]y = gcd(a, b)` となる [a] と [b] の最大公約数と解 x, y を求める
+ * @return  <gcd(a, b), x, y>
+ */
+private fun extensionGcd(a: Long, b: Long): Triple<Long, Long, Long> {
+    var ar = a
+    var br = b
+    var x0 = 1L
+    var x1 = 0L
+    var y0 = 0L
+    var y1 = 1L
+    while (br != 0L) {
+        val q = ar / br
+        val r = ar % br
+        val x2 = x0 - q * x1
+        val y2 = y0 - q * y1
+        run { ar = br; br = r; x0 = x1; x1 = x2; y0 = y1; y1 = y2 }
+    }
+    return Triple(ar, x0, y0)
+}
+
+// TODO なにこれ？
+private fun Long.invEuclid(m: Long): Long {
+    var a = this
+    var b = m
+    var u = 1L
+    var v = 0L
+    while (b > 0) {
+        val t = a / b
+        a -= t * b
+        val temp1 = a
+        a = b
+        b = temp1
+
+        u -= t * v
+        val temp2 = u
+        u = v
+        v = temp2
+    }
+    u %= m
+    if (u < 0) u += m
+    return u
 }
 
 /**
@@ -188,7 +269,7 @@ fun sigma(from: Long, to: Long): Long {
  */
 @Suppress("unused")
 class Sieve(private val max: Int) {
-    private val divisibleBy: IntArray = IntArray(max + 1)
+    private val divisibleBy: IntArray = IntArray((max + 1).coerceAtLeast(2))
     private val primes: MutableSet<Int> = mutableSetOf()
     private val maxSquare = max.toLong() * max
 
@@ -250,4 +331,89 @@ class Sieve(private val max: Int) {
             else -> throw IllegalArgumentException("n=$n is not integer or too large. must be smaller than max*max=$maxSquare")
         }
     }
+}
+
+/**
+ * TODO add test
+ * TODO add doc
+ */
+private fun matrixMultiplyMod(a: Array<LongArray>, b: Array<LongArray>, mod: Int): Array<LongArray> {
+    val c = Array(a.size) { LongArray(b.first().size) }
+    for (i in a.indices) for (k in b.indices) for (j in b.first().indices) {
+        c[i][j] = (c[i][j] + a[i][k] * b[k][j]) % mod
+    }
+    return c
+}
+
+/**
+ * TODO add test
+ * TODO add doc
+ */
+private fun matrixPowMod(a: Array<LongArray>, p: Long, mod: Int): Array<LongArray> {
+    var b = Array(a.size) { LongArray(a.size) }
+    for (i in a.indices) b[i][i] = 1
+    var ca = a
+    var cp = p
+    while (cp > 0) {
+        if (cp and 1 == 1L) b = matrixMultiplyMod(b, ca, mod)
+        ca = matrixMultiplyMod(ca, ca, mod)
+        cp /= 2
+    }
+    return b
+}
+
+/**
+ * 最大長方形 O(source.size)
+ * source の各値は 0 以上である必要あり
+ */
+private fun maxAreaInHistogram(source: LongArray): Long {
+    val array = source + -1L
+    val stack = java.util.Stack<IndexedValue<Long>>()
+    var maxArea = 0L
+
+    for ((right, a) in array.withIndex()) {
+        if (stack.isEmpty() || stack.peek().value <= a) {
+            stack.push(IndexedValue(right, a))
+        } else {
+            var mostLeft = right
+            while (stack.isNotEmpty() && stack.peek().value > a) {
+                val (left, value) = stack.pop()
+                mostLeft = left
+                maxArea = Math.max(maxArea, value * (right - mostLeft))
+            }
+            stack.push(IndexedValue(mostLeft, a))
+        }
+    }
+    return maxArea
+}
+
+private fun slideMinimumElement(array: LongArray, width: Int): Array<IndexedValue<Long>> {
+    val deque = java.util.ArrayDeque<IndexedValue<Long>>()
+    val result = Array<IndexedValue<Long>>(array.size - width + 1) { IndexedValue(0, 0) }
+    for (i in array.indices) {
+        while (deque.isNotEmpty() && i - deque.first.index >= width) deque.removeFirst()
+        while (deque.isNotEmpty() && deque.last.value > array[i]) deque.removeLast()
+        deque.addLast(IndexedValue(i, array[i]))
+        (i - width + 1).let { if (it >= 0) result[it] = IndexedValue(it, deque.first.value) }
+    }
+    return result
+}
+
+// todo verify
+private fun slideMaximumElement(array: LongArray, width: Int): Array<IndexedValue<Long>> {
+    val deque = java.util.ArrayDeque<IndexedValue<Long>>()
+    val result = Array<IndexedValue<Long>>(array.size - width + 1) { IndexedValue(0, 0) }
+    for (i in array.indices) {
+        while (deque.isNotEmpty() && i - deque.first.index >= width) deque.removeFirst()
+        while (deque.isNotEmpty() && deque.last.value < array[i]) deque.removeLast()
+        deque.addLast(IndexedValue(i, array[i]))
+        (i - width + 1).let { if (it >= 0) result[it] = IndexedValue(it, deque.first.value) }
+    }
+    return result
+}
+
+private fun Long.sqrt(): Long {
+    var sqrt = kotlin.math.sqrt(this.toDouble()).toLong() - 1
+    while ((sqrt + 1) * (sqrt + 1) <= this) sqrt++
+    return sqrt
 }

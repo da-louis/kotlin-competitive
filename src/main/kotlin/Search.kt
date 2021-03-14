@@ -1,3 +1,5 @@
+import java.util.*
+
 /**
  * base of binarySearch/lowerBound/upperBound
  */
@@ -66,6 +68,7 @@ inline fun <reified T> searchAllPatterns(patterns: Array<T>, length: Int, action
 /**
  * TODO add doc
  * TODO sequenceにしたら早くなる？？
+ * TODO 辞書順になってない
  */
 fun <T> permutations(source: List<T>): List<List<T>> {
     val n = source.size
@@ -137,4 +140,229 @@ private inline fun <reified T> rotateRight(graph: Array<Array<T>>): Array<Array<
     val rotated = Array(w) { Array(h) { defaultValue } }
     for (y in 0 until h) for (x in 0 until w) rotated[x][h - y - 1] = graph[y][x]
     return rotated
+}
+
+private fun rotateRight(graph: Array<IntArray>): Array<IntArray> {
+    val h = graph.size
+    val w = graph.first().size
+    val rotated = Array(w) { IntArray(h) }
+    for (y in 0 until h) for (x in 0 until w) rotated[x][h - y - 1] = graph[y][x]
+    return rotated
+}
+
+private fun rotateRight(graph: Array<BooleanArray>): Array<BooleanArray> {
+    val h = graph.size
+    val w = graph.first().size
+    val rotated = Array(w) { BooleanArray(h) }
+    for (y in 0 until h) for (x in 0 until w) rotated[x][h - y - 1] = graph[y][x]
+    return rotated
+}
+
+@Suppress("SameParameterValue")
+private fun <T> bitWholeSearch(length: Int, e: T, action: (Int, T) -> T): List<T> {
+    val result = mutableListOf<T>()
+    fun dfs(i: Int, accumulative: T) {
+        if (i == length) result.add(accumulative)
+        else {
+            dfs(i + 1, accumulative)
+            dfs(i + 1, action(i, accumulative))
+        }
+    }
+    dfs(0, e)
+    return result
+}
+
+fun actionWithNext(y: Int, x: Int, h: Int, w: Int, action: (Int, Int) -> Unit) {
+    val dy = intArrayOf(1, 0, -1, 0)
+    val dx = intArrayOf(0, 1, 0, -1)
+
+    repeat(dy.size) {
+        val ny = y + dy[it]
+        val nx = x + dx[it]
+        if (ny in 0 until h && nx in 0 until w) action(ny, nx)
+
+    }
+}
+
+fun addAroundWall(grid: Array<CharArray>, wall: Char): Triple<Int, Int, Array<CharArray>> {
+    val result = Array(grid.size + 2) { CharArray(grid.first().size + 2) { wall } }
+    for (i in grid.indices) for (j in grid.first().indices) {
+        result[i + 1][j + 1] = grid[i][j]
+    }
+    return Triple(result.size, result.first().size, result)
+}
+
+private fun addAroundWall(grid: Array<IntArray>, wall: Int): Triple<Int, Int, Array<IntArray>> {
+    val result = Array(grid.size + 2) { IntArray(grid.first().size + 2) { wall } }
+    for (i in grid.indices) for (j in grid.first().indices) {
+        result[i + 1][j + 1] = grid[i][j]
+    }
+    return Triple(result.size, result.first().size, result)
+}
+
+
+fun isBipartite() {
+    TODO()
+    // https://atcoder.jp/contests/agc039/submissions/16287411
+}
+
+data class Point(val y: Int, val x: Int)
+
+// TODO 「次を取得」を抽象化すればgrid以外にも汎用化できそう
+fun gridDfs(grid: Array<IntArray>, start: Point, height: Int, width: Int, action: () -> Unit) {
+    val visited = Array(height) { BooleanArray(width) }
+
+    fun innerDfs() {
+        TODO()
+    }
+}
+
+fun gridBfs() {
+    TODO()
+}
+
+//private data class Edge(val first: Int, val second: Int, val weight: Int)
+//private data class Vertex(val index: Int, val neighbor: MutableSet<Int> = mutableSetOf())
+//
+//private fun dijkstra(graph: Array<Vertex>, start: Int): IntArray {
+//    val distances = IntArray(graph.size) { inf }.apply { set(start, 0) }
+//    val queue = PriorityQueue<Vertex> { o1, o2 -> o1.cost.compareTo(o2.cost) }
+//        .apply { add(Vertex(start, 0)) }
+//
+//    while (queue.isNotEmpty()) {
+//        val (curr, dist) = queue.remove()
+//        if (dist > distances[curr]) continue
+//
+//        for ((_, next, edgeDist) in graph[curr].edges) {
+//            val totalDist = dist + edgeDist
+//
+//            if (totalDist < distances[next]) {
+//                distances[next] = totalDist
+//                queue.add(Vertex(next, totalDist))
+//            }
+//        }
+//    }
+//    return distances
+//}
+
+private data class Edge(val a: Int, val b: Int, val weight: Long = 1)
+private data class Vertex(val index: Int, val cost: Long = 0, val edges: MutableSet<Edge> = mutableSetOf())
+
+private const val INF = Long.MAX_VALUE / 10
+
+/**
+ * note: require graph construct cost.
+ */
+private fun dijkstra(edges: Array<Edge>, n: Int, start: Int): LongArray {
+    val graph = Array(n) { Vertex(it) }
+    edges.forEach { (s, t, d) ->
+        graph[s].edges.add(Edge(s, t, d))
+        //        graph[t].edges.add(Edge(t, s, d))
+    }
+    return dijkstra(graph, start)
+}
+
+private fun dijkstra(graph: Array<Vertex>, start: Int): LongArray {
+    val distances = LongArray(graph.size) { INF }.apply { this[start] = 0 }
+    val queue = PriorityQueue<Vertex> { o1, o2 -> o1.cost.compareTo(o2.cost) }
+        .apply { add(Vertex(start, 0)) }
+
+    while (queue.isNotEmpty()) {
+        val (curr, dist) = queue.remove()
+        if (dist > distances[curr]) continue
+
+        for ((_, next, edgeDist) in graph[curr].edges) {
+            val totalDist = dist + edgeDist
+
+            if (totalDist < distances[next]) {
+                distances[next] = totalDist
+                queue.add(Vertex(next, totalDist))
+            }
+        }
+    }
+    return distances
+}
+
+private fun kruskal(n: Int, edges: Array<Edge>): Pair<List<Edge>, Long> {
+    class UnionFind(size: LongArray) {
+        constructor(initSize: Int) : this(LongArray(initSize) { 1L })
+
+        private val parent: IntArray = IntArray(size.size) { it }
+        private val size: LongArray = size.copyOf()
+
+        fun root(x: Int): Int {
+            if (x == parent[x]) return x
+
+            val xr = root(parent[x])
+            parent[x] = xr
+            return xr
+        }
+
+        fun unite(x: Int, y: Int): Boolean {
+            val xr = root(x)
+            val yr = root(y)
+            if (xr == yr) return false
+            if (size[xr] < size[yr]) return unite(yr, xr)
+            size[xr] += size[yr]
+            parent[yr] = xr
+            return true
+        }
+
+        fun isSame(x: Int, y: Int): Boolean = root(x) == root(y)
+
+        fun unite(pair: Pair<Int, Int>): Boolean = unite(pair.first, pair.second)
+        fun isSame(pair: Pair<Int, Int>): Boolean = isSame(pair.first, pair.second)
+
+        fun size(x: Int): Long = size[root(x)]
+    }
+
+    val uf = UnionFind(n)
+    val mst = mutableListOf<Edge>()
+    var weightSum = 0L
+
+    for (edge in edges.sortedBy { it.weight }) {
+        if (uf.unite(edge.a, edge.b)) {
+            mst.add(edge)
+            weightSum += edge.weight
+        }
+    }
+    return mst to weightSum
+}
+
+private fun bellmanFord(v: Int, edges: Array<Edge>, start: Int): LongArray? {
+    val distances = LongArray(v) { INF }.apply { this[start] = 0 }
+    var count = 0
+    var updated = true
+    while (updated) {
+        updated = false
+        count++
+        for ((s, t, d) in edges) {
+            if (distances[s] == INF) continue
+            val nextDist = distances[s] + d
+            if (nextDist >= distances[t]) continue
+            if (count == v) return null
+            updated = true
+            distances[t] = nextDist
+        }
+    }
+    return distances
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+private fun filterEdgesReachableToGoal(v: Int, edges: Array<Edge>, goal: Int, directGraph: Boolean): Array<Edge> {
+    val revGraph = Array(v) { mutableListOf<Int>() }
+    for ((a, b) in edges) {
+        revGraph[b].add(a)
+        if (!directGraph) revGraph[a].add(b)
+    }
+    val visited = BooleanArray(v).apply { this[goal] = true }
+    val queue = kotlin.collections.ArrayDeque(listOf(goal))
+    while (queue.isNotEmpty()) {
+        val curr = queue.removeFirst()
+        for (next in revGraph[curr]) if (!visited[next]) {
+            visited[next] = true
+            queue.addLast(next)
+        }
+    }
+    return edges.filter { visited[it.a] && visited[it.b] }.toTypedArray()
 }

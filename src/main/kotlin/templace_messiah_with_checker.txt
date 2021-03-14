@@ -22,7 +22,8 @@ private const val MOD = 1_000_000_007
 
 // region kokokara template dayo (^o^)
 private const val execChecker = false
-private val localEnv = "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv()
+private val localEnv =
+    runCatching { "ENABLE_DEBUG_MODE_FOR_COMPETITIVE_PROGRAMING" in System.getenv() }.getOrNull() ?: false
 private fun checker() = Messiah_${NAME}(MOD).exec {
     debugln("${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}")
     debugln("${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}  executing check mode.  ${FIVE_SHARP}${FIVE_SHARP}${FIVE_SHARP}")
@@ -181,9 +182,10 @@ private class Messiah_${NAME}(private val mod: Int) {
     fun print(any: Any): Unit = run { sb.append(any.toString()) }
     fun println(any: Any): Unit = run { sb.append(any.toString() + lineSeparator) }
     fun flush() = run { kotlin.io.println(sb); sb.clear() }
+    fun debug(any: Any): Unit = run { if (localEnv) System.err.print(any) }
     fun debugln(any: Any): Unit = run { if (localEnv) System.err.println(any) }
     fun debugln(): Unit = run { if (localEnv) System.err.println() }
-    fun debugln(action: () -> Unit): Unit = run { if (localEnv) action() }
+    fun debugExec(action: () -> Unit): Unit = run { if (localEnv) action() }
 
     fun exec(action: Messiah_${NAME}.() -> Unit) {
         var t: Throwable? = null
@@ -197,33 +199,63 @@ private class Messiah_${NAME}(private val mod: Int) {
     fun readLine(): Nothing = error("readLine is disabled.")
 
     //////////////////////////////////////////////////
-    // Mod
+    // MOD
     //////////////////////////////////////////////////
-    fun Long.takeMod(): Long = (this % mod).let { if (it < 0) it + mod else it }
-    fun Long.plusMod(b: Long): Long = (this.takeMod() + b.takeMod()).takeMod()
-    fun Long.minusMod(b: Long): Long = this.plusMod(-b)
-    fun Long.timesMod(b: Long): Long = (this.takeMod()*b.takeMod()).takeMod()
-    fun Long.divMod(b: Long): Long = this.timesMod(b.inv())
-    fun Long.invMod(): Long = this.powMod(mod - 2L)
-    fun Long.powMod(b: Long): Long {
-        var x = this % mod
-        var y = b
+    private val modIsPrime: Boolean = MOD.toBigInteger().isProbablePrime(100)
+
+    fun Long.invertMod(): Long = if (modIsPrime) this.powMod(MOD - 2L) else invGcd(this).second
+    fun Long.safeMod(): Long = (this % MOD).let { if (it < 0) it + MOD else it }
+    fun Long.plusMod(other: Long): Long = this.plus(other).safeMod()
+    fun Long.minusMod(other: Long): Long = this.minus(other).safeMod()
+    fun Long.timesMod(other: Long): Long = this.times(other).safeMod()
+    fun Long.divMod(other: Long): Long = this.times(other.invertMod()).safeMod()
+
+    fun Long.powMod(p: Long): Long {
+        var x = this % MOD
+        var y = p
         var result = 1L
         while (y > 0) {
-            if (y % 2 == 1L) result = (result * x) % mod
+            if (y % 2 == 1L) result = (result * x) % MOD
             y = y shr 1
-            x = (x * x) % mod
+            x = (x * x) % MOD
         }
         return result
     }
 
-    fun Int.takeMod(): Int = this.toLong().takeMod().toInt()
-    fun Int.plusMod(b: Int): Int = this.toLong().plusMod(b.toLong()).toInt()
-    fun Int.minusMod(b: Int): Int = this.toLong().minusMod(b.toLong()).toInt()
-    fun Int.timesMod(b: Int): Int = this.toLong().timesMod(b.toLong()).toInt()
-    fun Int.divMod(b: Int): Int = this.toLong().divMod(b.toLong()).toInt()
-    fun Int.invMod(): Int = this.toLong().invMod().toInt()
-    fun Int.powMod(b: Long): Int = this.toLong().powMod(b).toInt()
+    fun Long.powMod(p: Long, m: Int): Long {
+        var x = this % m
+        var y = p
+        var result = 1L
+        while (y > 0) {
+            if (y % 2 == 1L) result = (result * x) % m
+            y = y shr 1
+            x = (x * x) % m
+        }
+        return result
+    }
+
+    fun invGcd(a: Long): Pair<Long, Long> {
+        val am = a.safeMod()
+        if (a == 0L) return MOD.toLong() to 0L
+        var s = MOD.toLong()
+        var t = am
+        var m0 = 0L
+        var m1 = 1L
+        while (t != 0L) {
+            val u = s / t
+            s -= t * u
+            m0 -= m1 * u
+
+            var temp = s
+            s = t
+            t = temp
+            temp = m0
+            m0 = m1
+            m1 = temp
+        }
+        if (m0 < 0) m0 += MOD / s
+        return s to m0
+    }
 
     //////////////////////////////////////////////////
     // Misc
@@ -270,6 +302,43 @@ private class Messiah_${NAME}(private val mod: Int) {
         this.forEachIndices { y1 -> x.forEachIndices { x1 -> transform(y1, x1) } }
 
     /**
+     * 正の方向へ丸める割り算
+     */
+    fun Int.ceilDiv(b: Int): Int = this.also { check(b != 0) }.run {
+        when {
+            b < 0 -> (-this).ceilDiv(-b)
+            this > 0 -> ((this + b - 1) / b)
+            else -> (this / b)
+        }
+    }
+
+    /**
+     * 負の方向へ丸める割り算
+     */
+    fun Int.floorDiv(b: Int): Int = -(-this).ceilDiv(b)
+
+    /**
+     * 正の方向へ丸める割り算
+     */
+    fun Long.ceilDiv(b: Long): Long = this.also { check(b != 0L) }.run {
+        when {
+            b < 0 -> (-this).ceilDiv(-b)
+            this > 0 -> ((this + b - 1) / b)
+            else -> (this / b)
+        }
+    }
+
+    /**
+     * 負の方向へ丸める割り算
+     */
+    fun Long.floorDiv(b: Long): Long = -(-this).ceilDiv(b)
+
+    /**
+     * 0から離れている方向の[b]の倍数へ切り上げる
+     */
+    fun Long.ceilMultipleOf(b: Long): Long = this / b * b + if (this % b == 0L) 0L else b
+
+    /**
      * get characters numeric value.
      * e.g.: '0' to 0
      */
@@ -277,9 +346,26 @@ private class Messiah_${NAME}(private val mod: Int) {
 
     fun Char.caseToIndexedValue(): Int = this - 'a'
 
-//    fun Char.isLowerCase() = this in 'a'..'z'
-//
-//    fun Char.isUpperCase() = this in 'A'..'Z'
+    fun String.toPoweredLong(p: Int): Long {
+        check(this.isNotBlank())
+        if (this[0] == '-') return -this.drop(1).toPoweredLong(p)
+        var mulI = 1L
+        repeat(p) { mulI *= 10 }
+        val i = this.indexOf('.').takeIf { it != -1 } ?: return this.toLong() * mulI
+        var mulD = 1L
+        repeat(p - this.length + i + 1) { mulD *= 10 }
+        return this.slice(0 until i).toLong() * mulI + this.slice(i + 1..this.lastIndex).toLong() * mulD
+    }
+
+    fun String.toBigIntegerWithBase(base: java.math.BigInteger):java.math. BigInteger {
+        var sum = java.math.BigInteger.ZERO
+        var bs = java.math.BigInteger.ONE
+        for (c in this.reversed()) {
+            sum += bs * (java.lang.Character.getNumericValue(c)).toBigInteger()
+            bs *= base
+        }
+        return sum
+    }
 
     /**
      * make triple. e.g.:`1 to 2 to 3`
@@ -298,37 +384,27 @@ private class Messiah_${NAME}(private val mod: Int) {
     fun CharArray.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
     fun <T> Array<T>.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
     fun <T> MutableList<T>.swap(a: Int, b: Int): Unit = run { val temp = this[a]; this[a] = this[b]; this[b] = temp }
+    fun Array<IntArray>.swap(a: Int, b: Int, c: Int, d: Int): Unit =
+        run { val temp = this[a][b]; this[a][b] = this[c][d]; this[c][d] = temp }
 
-    fun IntArray.changeMinOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.min(this[i], v) }
-    fun IntArray.changeMaxOf(i: Int, v: Int): Unit = run { this[i] = kotlin.math.max(this[i], v) }
-    fun LongArray.changeMinOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.min(this[i], v) }
-    fun LongArray.changeMaxOf(i: Int, v: Long): Unit = run { this[i] = kotlin.math.max(this[i], v) }
+    fun Array<LongArray>.swap(a: Int, b: Int, c: Int, d: Int): Unit =
+        run { val temp = this[a][b]; this[a][b] = this[c][d]; this[c][d] = temp }
 
-    fun IntArray.plusAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].plusMod(v) }
-    fun IntArray.minusAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].minusMod(v) }
-    fun IntArray.timesAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].timesMod(v) }
-    fun IntArray.divAssignMod(i: Int, v: Int): Unit = run { this[i] = this[i].divMod(v) }
-    fun IntArray.powAssignMod(i: Int, v: Long): Unit = run { this[i] = this[i].powMod(v) }
+    fun Array<CharArray>.swap(a: Int, b: Int, c: Int, d: Int): Unit =
+        run { val temp = this[a][b]; this[a][b] = this[c][d]; this[c][d] = temp }
 
-    fun LongArray.plusAssignMod(i: Int, v: Int): Unit = run {
-        this[i] = (this[i] % mod).toInt().plusMod(v).toLong()
-    }
-
-    fun LongArray.minusAssignMod(i: Int, v: Int): Unit = run {
-        this[i] = (this[i] % mod).toInt().minusMod(v).toLong()
-    }
-
-    fun LongArray.timesAssignMod(i: Int, v: Int): Unit = run {
-        this[i] = (this[i] % mod).toInt().timesMod(v).toLong()
-    }
-
-    fun LongArray.divAssignMod(i: Int, v: Int): Unit = run {
-        this[i] = (this[i] % mod).toInt().divMod(v).toLong()
-    }
-
-    fun LongArray.powAssignMod(i: Int, v: Long): Unit = run {
-        this[i] = (this[i] % mod).toInt().powMod(v).toLong()
-    }
+    fun IntArray.changeMinOf(i: Int, v: Int): Boolean = run { if (this[i] > v) run { this[i] = v; true } else false }
+    fun IntArray.changeMaxOf(i: Int, v: Int): Boolean = run { if (this[i] < v) run { this[i] = v; true } else false }
+    fun LongArray.changeMinOf(i: Int, v: Long): Boolean = run { if (this[i] > v) run { this[i] = v; true } else false }
+    fun LongArray.changeMaxOf(i: Int, v: Long): Boolean = run { if (this[i] < v) run { this[i] = v; true } else false }
+    fun Array<IntArray>.changeMinOf(i: Int, j: Int, v: Int): Boolean = this[i].changeMinOf(j, v)
+    fun Array<IntArray>.changeMaxOf(i: Int, j: Int, v: Int): Boolean = this[i].changeMaxOf(j, v)
+    fun Array<LongArray>.changeMinOf(i: Int, j: Int, v: Long): Boolean = this[i].changeMinOf(j, v)
+    fun Array<LongArray>.changeMaxOf(i: Int, j: Int, v: Long): Boolean = this[i].changeMaxOf(j, v)
+    fun Array<Array<IntArray>>.changeMinOf(i: Int, j: Int, k: Int, v: Int): Boolean = this[i].changeMinOf(j, k, v)
+    fun Array<Array<IntArray>>.changeMaxOf(i: Int, j: Int, k: Int, v: Int): Boolean = this[i].changeMaxOf(j, k, v)
+    fun Array<Array<LongArray>>.changeMinOf(i: Int, j: Int, k: Int, v: Long): Boolean = this[i].changeMinOf(j, k, v)
+    fun Array<Array<LongArray>>.changeMaxOf(i: Int, j: Int, k: Int, v: Long): Boolean = this[i].changeMaxOf(j, k, v)
 
     /**
      * same usage as `IntArray.scan`, but it will faster than that.
